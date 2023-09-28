@@ -3,7 +3,7 @@ const moment = require('moment');
 const httpStatus = require('http-status');
 const config = require('../config/config');
 const userService = require('./user.service');
-const prisma = require('../../prisma');
+const prisma = require('../prisma');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
 
@@ -36,11 +36,13 @@ const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
  */
 const saveToken = async (token, userId, expires, type, blacklisted = false) => {
   const tokenDoc = await prisma.tokens.create({
-    token,
-    user: userId,
-    expires: expires.toDate(),
-    type,
-    blacklisted,
+    data: {
+      token,
+      user: userId,
+      expires: expires.toDate(),
+      type,
+      blacklisted,
+    },
   });
   return tokenDoc;
 };

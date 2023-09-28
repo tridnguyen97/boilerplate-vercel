@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
-const prisma = require('../../prisma');
+const prisma = require('../prisma');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -14,7 +14,7 @@ const isEmailTaken = async (userEmail, excludeUserId) => {
     where: {
       email: userEmail,
       NOT: {
-        id: excludeUserId !== undefined ? excludeUserId : '',
+        id: excludeUserId !== undefined ? excludeUserId : undefined,
       },
     },
   });

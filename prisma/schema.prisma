@@ -39,7 +39,7 @@ model tokens {
   blacklisted Boolean
   createdAt   DateTime @db.Date
   expires     DateTime @db.Date
-  token       String
+  token       String   @unique @db.VarChar(255)
   type        String
   updatedAt   DateTime @db.Date
   user        users    @relation(fields: [userId], references: [id])
