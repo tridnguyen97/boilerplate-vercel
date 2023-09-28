@@ -20,8 +20,13 @@ const isEmailTaken = async (userEmail, excludeUserId) => {
   });
   return !!user;
 };
-
-const isPasswordMatch = (userPassword, password) => {
+/**
+ * Check if password matches the user's password
+ * @param {string} userPassword - password of user
+ * @param {string} password - password needed to check
+ * @returns {Promise<boolean>}
+ */
+const isPasswordMatch = async (userPassword, password) => {
   return bcrypt.compare(password, userPassword);
 };
 

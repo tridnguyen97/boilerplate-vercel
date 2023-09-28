@@ -37,11 +37,11 @@ enum tokenTypes {
 model tokens {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   blacklisted Boolean
-  createdAt   DateTime @db.Date
-  expires     DateTime @db.Date
+  createdAt   DateTime @default(now())
+  expires     DateTime @db.Timestamp
   token       String   @unique @db.VarChar(255)
   type        String
-  updatedAt   DateTime @db.Date
+  updatedAt   DateTime @updatedAt
   user        users    @relation(fields: [userId], references: [id])
   userId      String   @db.Uuid
 }
