@@ -1,6 +1,34 @@
 const httpStatus = require('http-status');
-const { User } = require('../models');
+const bcrypt = require('bcryptjs');
+const prisma = require('../prisma');
 const ApiError = require('../utils/ApiError');
+
+/**
+ * Check if email is taken
+ * @param {string} email - The user's email
+ * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
+ * @returns {Promise<boolean>}
+ */
+const isEmailTaken = async (userEmail, excludeUserId) => {
+  const user = await prisma.users.findUnique({
+    where: {
+      email: userEmail,
+      NOT: {
+        id: excludeUserId !== undefined ? excludeUserId : undefined,
+      },
+    },
+  });
+  return !!user;
+};
+/**
+ * Check if password matches the user's password
+ * @param {string} userPassword - password of user
+ * @param {string} password - password needed to check
+ * @returns {Promise<boolean>}
+ */
+const isPasswordMatch = async (userPassword, password) => {
+  return bcrypt.compare(password, userPassword);
+};
 
 /**
  * Create a user
@@ -8,23 +36,49 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
-  if (await User.isEmailTaken(userBody.email)) {
+  if (await isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
-  return User.create(userBody);
+  // eslint-disable-next-line no-param-reassign
+  userBody.password = await bcrypt.hash(userBody.password, 8);
+  return prisma.users.create({
+    data: userBody,
+  });
 };
 
 /**
- * Query for users
- * @param {Object} filter - Mongo filter
+ * Get all users with pagination, filtering and sorting
+ * @param {Object} filter - SQL filter
  * @param {Object} options - Query options
  * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
  * @param {number} [options.limit] - Maximum number of results per page (default = 10)
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryUsers = async (filter, options) => {
-  const users = await User.paginate(filter, options);
+const getUsers = async (filter, options) => {
+  let sort = '';
+  const DEFAULT_SORT = {
+    createdAt: 'desc',
+  };
+  if (options.sortBy) {
+    const sortingCriteria = [];
+    options.sortBy.split(',').forEach((sortOption) => {
+      const [key, order] = sortOption.split(':');
+      sortingCriteria.push(JSON.parse(`${key}: ${order}`));
+    });
+  } else {
+    sort = DEFAULT_SORT;
+  }
+  const limit = options.limit && parseInt(options.limit, 10) > 0 ? parseInt(options.limit, 10) : 10;
+  const page = options.page && parseInt(options.page, 10) > 0 ? parseInt(options.page, 10) : 1;
+  const skip = (page - 1) * limit;
+
+  const users = await prisma.users.findMany({
+    skip,
+    take: limit,
+    where: filter,
+    orderBy: sort,
+  });
   return users;
 };
 
@@ -34,7 +88,9 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id) => {
-  return User.findById(id);
+  return prisma.users.findUnique({
+    where: { id },
+  });
 };
 
 /**
@@ -43,7 +99,9 @@ const getUserById = async (id) => {
  * @returns {Promise<User>}
  */
 const getUserByEmail = async (email) => {
-  return User.findOne({ email });
+  return prisma.users.findUnique({
+    where: { email },
+  });
 };
 
 /**
@@ -57,7 +115,7 @@ const updateUserById = async (userId, updateBody) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
+  if (updateBody.email && (await isEmailTaken(updateBody.email, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
   Object.assign(user, updateBody);
@@ -80,8 +138,9 @@ const deleteUserById = async (userId) => {
 };
 
 module.exports = {
+  isPasswordMatch,
   createUser,
-  queryUsers,
+  getUsers,
   getUserById,
   getUserByEmail,
   updateUserById,
