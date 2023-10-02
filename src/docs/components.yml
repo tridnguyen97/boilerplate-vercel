@@ -57,6 +57,15 @@ components:
           example:
             code: 400
             message: Email already taken
+    NotInRangeVideo:
+      description: Range of video not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Range of video not found
     Unauthorized:
       description: Unauthorized
       content:

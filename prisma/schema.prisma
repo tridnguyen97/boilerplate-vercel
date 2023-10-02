@@ -45,3 +45,11 @@ model tokens {
   user        users    @relation(fields: [userId], references: [id])
   userId      String   @db.Uuid
 }
+
+model videos {
+  id          String        @id @default(uuid()) @db.Uuid
+  thumbnailId String        @unique
+  fileId      String        @unique
+  title       String
+  description String
+}
