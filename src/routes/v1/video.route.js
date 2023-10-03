@@ -38,37 +38,33 @@ module.exports = router;
  *     security:
  *       - bearerAuth: []
  *     requestBody:
- *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
- *             required:
- *               - name
- *               - thumbnail name
- *               - title
- *               - description
  *             properties:
- *               name:
+ *               file:
  *                 type: string
- *               thumbnail name:
+ *                 format: binary
+ *               thumbnail:
  *                 type: string
+ *                 format: binary
  *               title:
  *                 type: string
  *               description:
- *                  type: string
+ *                 type: string
  *             example:
  *               name: Rush Hour 4 [1080p]
  *               thumbnail name: rush-hour-4png
  *               title: Rush Hour 4 Explicit
  *               description: The whole new journey of Carter and Lee
  *     responses:
- *       "201":
- *         description: Created
+ *       "200":
+ *         description: Video created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Video'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -77,7 +73,7 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *
  *   get:
- *     summary: Get video content
+ *     summary: Get all videos
  *     description: Only admins can retrieve all users.
  *     tags: [Videos]
  *     security:

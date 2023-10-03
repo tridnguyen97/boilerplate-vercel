@@ -24,7 +24,6 @@ const getVideo = catchAsync(async (req, res) => {
   const fileLocation = getVideoFileLocation(fileId);
   const videoSize = fs.statSync(fileLocation).size;
   const headers = getStreamHeader(range, CHUNKSIZE, videoSize);
-  console.log(headers);
   res.writeHead(206, headers);
   const stream = await videoService.getVideoStream(fileId);
   stream.pipe(res);
