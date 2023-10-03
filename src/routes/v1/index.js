@@ -3,6 +3,7 @@ const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const docsRoute = require('./docs.route');
 const videoRoute = require('./video.route');
+const contactRoute = require('./contact.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -19,6 +20,10 @@ const defaultRoutes = [
   {
     path: '/videos',
     route: videoRoute,
+  },
+  {
+    path: '/contacts',
+    route: contactRoute,
   },
 ];
 
