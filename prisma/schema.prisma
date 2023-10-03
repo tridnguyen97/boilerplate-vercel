@@ -25,6 +25,8 @@ model users {
   role            Roles    @default(USER)
   updatedAt       DateTime @updatedAt
   tokens          tokens[]
+  contacts        contacts?
+  groups          groups[]
 }
 
 enum tokenTypes {
@@ -52,4 +54,25 @@ model videos {
   fileId      String        @unique
   title       String
   description String
+}
+
+model groups {
+  id          String        @id @default(uuid()) @db.Uuid
+  name        String
+  owner       users         @relation(fields: [ownerId], references: [id])
+  ownerId     String        @db.Uuid
+  contacts    contacts[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model contacts {
+  id          String   @id @default(uuid()) @db.Uuid
+  nickname    String
+  user        users    @relation(fields: [userId], references: [id])
+  userId      String   @unique @db.Uuid
+  group       groups?   @relation(fields: [groupId], references: [id])
+  groupId     String?   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
