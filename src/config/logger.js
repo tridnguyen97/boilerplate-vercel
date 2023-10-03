@@ -1,4 +1,5 @@
 const winston = require('winston');
+const path = require('path');
 const config = require('./config');
 
 const enumerateErrorFormat = winston.format((info) => {
@@ -19,6 +20,13 @@ const logger = winston.createLogger({
   transports: [
     new winston.transports.Console({
       stderrLevels: ['error'],
+    }),
+    new winston.transports.File({
+      filename: path.join(config.log_path, 'error.log'),
+      level: 'error',
+    }),
+    new winston.transports.File({
+      filename: path.join(config.log_path, 'access.log'),
     }),
   ],
 });
