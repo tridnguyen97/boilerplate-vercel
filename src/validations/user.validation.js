@@ -41,7 +41,7 @@ const updateUser = {
 
 const deleteUser = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
+    userId: Joi.string().guid({ version: 'uuidv4' }),
   }),
 };
 

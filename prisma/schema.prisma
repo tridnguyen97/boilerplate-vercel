@@ -44,7 +44,7 @@ model tokens {
   token       String   @unique @db.VarChar(255)
   type        String
   updatedAt   DateTime @updatedAt
-  user        users    @relation(fields: [userId], references: [id])
+  user        users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String   @db.Uuid
 }
 
