@@ -6,8 +6,11 @@ const getVideoStream = async (fileId, start, end) => {
   return videoStream;
 };
 
-const getAllVideos = async () => {
-  return prisma.videos.findMany();
+const getAllVideos = async (filter, options) => {
+  return prisma.videos.findMany({
+    filter,
+    options,
+  });
 };
 
 const getVideo = async (videoId) => {

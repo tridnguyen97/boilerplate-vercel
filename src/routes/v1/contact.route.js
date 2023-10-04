@@ -1,10 +1,9 @@
 const express = require('express');
 const contactController = require('../../controllers/contact.controller');
-const auth = require('../../middlewares/auth');
 
 const router = express.Router();
 
-router.route('/').get(auth(), contactController.getAllContacts).post(contactController.createContact);
+router.route('/').get(contactController.getAllContacts).post(contactController.createContact);
 
 router.route('/groups').get(contactController.getContactGroups).post(contactController.createContactGroup);
 

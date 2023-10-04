@@ -54,6 +54,8 @@ model videos {
   fileId      String        @unique
   title       String
   description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model groups {

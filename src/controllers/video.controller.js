@@ -1,12 +1,15 @@
 const httpStatus = require('http-status');
 const fs = require('fs');
+const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { videoService } = require('../services');
 const { getStreamHeader, getVideoFileLocation } = require('../utils/video.helper');
 
 const getAllVideos = catchAsync(async (req, res) => {
-  const videos = await videoService.getAllVideos();
+  const filter = pick(req.query, []);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const videos = await videoService.getAllVideos(filter, options);
   res.send(videos);
 });
 
