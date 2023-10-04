@@ -25,8 +25,8 @@ model users {
   role            Roles    @default(USER)
   updatedAt       DateTime @updatedAt
   tokens          tokens[]
-  contacts        contacts?
   groups          groups[]
+  aid             anonymousUsers?
 }
 
 enum tokenTypes {
@@ -68,11 +68,19 @@ model groups {
 
 model contacts {
   id          String   @id @default(uuid()) @db.Uuid
-  nickname    String
-  user        users    @relation(fields: [userId], references: [id])
-  userId      String   @unique @db.Uuid
+  user        anonymousUsers?    @relation(fields: [userId], references: [id])
+  userId      String?   @unique @db.Uuid
   group       groups?   @relation(fields: [groupId], references: [id])
   groupId     String?   @db.Uuid
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model anonymousUsers {
+  id          String    @id @default(uuid()) @db.Uuid
+  nickname    String
+  contacts    contacts?
+  deviceId    String    @unique
+  user        users?    @relation(fields: [userId], references: [id])
+  userId      String?    @unique @db.Uuid
 }

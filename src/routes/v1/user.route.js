@@ -17,6 +17,9 @@ router
   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
+router.route('/anon').post(userController.createAnonUser);
+
+router.route('/anon/list/:name').get(userController.getAnonUser);
 module.exports = router;
 
 /**
@@ -249,4 +252,70 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * /users/anon:
+ *   post:
+ *     summary: Create an anonymous user
+ *     description: Only admins can create other anonymous users.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - deviceId
+ *               - nickname
+ *             properties:
+ *               deviceId:
+ *                 type: string
+ *               nickname:
+ *                 type: string
+ *             example:
+ *               deviceId: string
+ *               nickname: string
+ *     responses:
+ *       "201":
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/AnonymousUser'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *
+ */
+
+/**
+ * @swagger
+ * /users/anon/list/{name}:
+ *   get:
+ *     summary: Get anonymous user list
+ *     description: Fetch all
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Anonymous username
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/User'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
  */

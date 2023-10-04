@@ -52,12 +52,29 @@ components:
           type: string
         description:
           type: string
-        example:
-          id: a1b5b0e0-dbab-4a2f-a95e-67358b94a0a9,
-          thumbnailId: 7d2f9612d26c61e676e8d79105337fdd,
-          fileId: f18f894309361cf37fe110dfccd40fb0,
-          title: live 100ms,
-          description: This is test video
+      example:
+        id: a1b5b0e0-dbab-4a2f-a95e-67358b94a0a9,
+        thumbnailId: 7d2f9612d26c61e676e8d79105337fdd,
+        fileId: f18f894309361cf37fe110dfccd40fb0,
+        title: live 100ms,
+        description: This is test video
+
+    AnonymousUser:
+      type: object
+      properties:
+        id:
+          type: string
+        nickname:
+          type: string
+        deviceId:
+          type: string
+        userId:
+          type: string
+      example:
+        id: 6e48bbd2-ce18-4c64-9bb0-89a4a5b06e1a,
+        nickname: hongMjAyMy0xMC0wNFQwMToxNzoxMS4zNjla,
+        deviceId: 04c48ca23d0efd92,
+        userId: null
 
     Error:
       type: object

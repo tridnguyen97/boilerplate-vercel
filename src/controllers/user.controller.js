@@ -3,6 +3,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
+const { getRandomName } = require('../utils/contact.helper');
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -34,10 +35,28 @@ const deleteUser = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const createAnonUser = catchAsync(async (req, res) => {
+  const { deviceId, nickname } = req.body;
+  const payload = {
+    deviceId,
+    nickname: getRandomName(nickname),
+  };
+  const anonUser = await userService.createAnonUser(payload);
+  res.send(anonUser);
+});
+
+const getAnonUser = catchAsync(async (req, res) => {
+  const anonUser = await userService.getAnonUserByName(req.params.name);
+  if (!anonUser) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  res.send(anonUser);
+});
+
 module.exports = {
   createUser,
   getUsers,
   getUser,
   updateUser,
   deleteUser,
+  createAnonUser,
+  getAnonUser,
 };

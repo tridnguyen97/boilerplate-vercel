@@ -137,6 +137,21 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+const createAnonUser = async (userBody) => {
+  return prisma.anonymousUsers.create({
+    data: userBody,
+  });
+};
+const getAnonUserByName = async (name) => {
+  return prisma.anonymousUsers.findMany({
+    where: {
+      nickname: {
+        contains: name,
+      },
+    },
+  });
+};
+
 module.exports = {
   isPasswordMatch,
   createUser,
@@ -145,4 +160,6 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  createAnonUser,
+  getAnonUserByName,
 };
