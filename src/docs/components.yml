@@ -76,6 +76,14 @@ components:
         deviceId: 04c48ca23d0efd92,
         userId: null
 
+    Category:
+      type: object
+      properties:
+        name: 
+          type: string
+      example:
+        name: drama
+
     Error:
       type: object
       properties:
