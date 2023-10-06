@@ -6,12 +6,13 @@ const prisma = new PrismaClient().$extends({
     $allModels: {
       async findMany({ args, query }) {
         const { filter, options } = args;
-        const { skip, limit, page, sort } = paginate(options);
+        const { skip, limit, page, sort, cursor } = paginate(options);
         const results = await query({
           skip,
           take: limit,
           where: filter !== null || undefined ? filter : {},
           orderBy: sort,
+          cursor: cursor !== '' || undefined ? cursor : {},
         });
         const totalResults = results.length;
         const totalPages = Math.ceil(totalResults / limit);

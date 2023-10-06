@@ -83,6 +83,8 @@ model anonymousUsers {
   id          String    @id @default(uuid()) @db.Uuid
   nickname    String
   contacts    contacts?
+  followedBy anonymousFriends[]  @relation("following")
+  following  anonymousFriends[]  @relation("follower")
   deviceId    String    @unique
   user        users?    @relation(fields: [userId], references: [id])
   userId      String?    @unique @db.Uuid
@@ -102,4 +104,26 @@ model categoriesOnVideos {
   createdAt DateTime @default(now())
 
   @@id([videoId, categoryId])
+}
+
+model anonymousFriends {
+  follower    anonymousUsers @relation("follower", fields: [followerId], references: [id])
+  followerId  String @db.Uuid
+  following   anonymousUsers @relation("following", fields: [followingId], references: [id])
+  followingId String @db.Uuid
+  relationshipStatus     RelationshipStatus?
+  notificationPreference NotificationPreference?
+  @@id([followerId, followingId])
+}
+
+enum RelationshipStatus {
+  FAMILY
+  FRIEND
+  ACQUAINTANCE
+}
+
+enum NotificationPreference {
+  MUTED_UNTIL_TOMORROW
+  MUTED_FOREVER
+  NORMAL
 }
