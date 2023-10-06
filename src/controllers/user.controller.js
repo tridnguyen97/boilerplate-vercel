@@ -3,7 +3,6 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
-const { getRandomName } = require('../utils/contact.helper');
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -36,12 +35,7 @@ const deleteUser = catchAsync(async (req, res) => {
 });
 
 const createAnonUser = catchAsync(async (req, res) => {
-  const { deviceId } = req.body;
-  const payload = {
-    deviceId,
-    nickname: getRandomName(),
-  };
-  const anonUser = await userService.createAnonUser(payload);
+  const anonUser = await userService.createAnonUser(req.body);
   res.send(anonUser);
 });
 

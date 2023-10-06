@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
 const prisma = require('../prisma');
 const ApiError = require('../utils/ApiError');
+const { getRandomName } = require('../utils/contact.helper');
 
 /**
  * Check if email is taken
@@ -125,10 +126,16 @@ const deleteUserById = async (userId) => {
 };
 
 const createAnonUser = async (userBody) => {
+  const { deviceId } = userBody;
+  const payload = {
+    deviceId,
+    nickname: getRandomName(),
+  };
   return prisma.anonymousUsers.create({
-    data: userBody,
+    data: payload,
   });
 };
+
 const getAnonUserByName = async (filter, options) => {
   return prisma.anonymousUsers.findMany({
     filter,
