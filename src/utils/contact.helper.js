@@ -1,9 +1,7 @@
-const moment = require('moment');
+const { fakerVI } = require('@faker-js/faker');
 
-const getRandomName = (username) => {
-  const currentDate = moment().toISOString();
-  const encoded = Buffer.from(currentDate).toString('base64');
-  return `${username}${encoded}`;
+const getRandomName = () => {
+  return `${fakerVI.person.firstName()}`;
 };
 
 module.exports = {

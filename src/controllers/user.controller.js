@@ -36,10 +36,10 @@ const deleteUser = catchAsync(async (req, res) => {
 });
 
 const createAnonUser = catchAsync(async (req, res) => {
-  const { deviceId, nickname } = req.body;
+  const { deviceId } = req.body;
   const payload = {
     deviceId,
-    nickname: getRandomName(nickname),
+    nickname: getRandomName(),
   };
   const anonUser = await userService.createAnonUser(payload);
   res.send(anonUser);
