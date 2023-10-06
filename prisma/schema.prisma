@@ -86,6 +86,7 @@ model anonymousUsers {
   followedBy anonymousFriends[]  @relation("following")
   following  anonymousFriends[]  @relation("follower")
   deviceId    String    @unique
+  createdAt   DateTime  @default(now())
   user        users?    @relation(fields: [userId], references: [id])
   userId      String?    @unique @db.Uuid
 }

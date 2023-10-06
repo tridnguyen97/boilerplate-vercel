@@ -46,7 +46,13 @@ const createAnonUser = catchAsync(async (req, res) => {
 });
 
 const getAnonUser = catchAsync(async (req, res) => {
-  const anonUser = await userService.getAnonUserByName(req.params.name);
+  const filter = {
+    nickname: {
+      contains: req.params.name,
+    },
+  };
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const anonUser = await userService.getAnonUserByName(filter, options);
   if (!anonUser) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   res.send(anonUser);
 });

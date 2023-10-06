@@ -129,13 +129,10 @@ const createAnonUser = async (userBody) => {
     data: userBody,
   });
 };
-const getAnonUserByName = async (name) => {
+const getAnonUserByName = async (filter, options) => {
   return prisma.anonymousUsers.findMany({
-    where: {
-      nickname: {
-        contains: name,
-      },
-    },
+    filter,
+    options,
   });
 };
 
