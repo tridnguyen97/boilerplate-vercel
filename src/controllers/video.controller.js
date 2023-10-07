@@ -4,7 +4,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { videoService } = require('../services');
-const { getStreamHeader, getVideoFileLocation } = require('../utils/video.helper');
+const { getStreamHeader, getVideoFileLocation, getVideoUrl } = require('../utils/video.helper');
 
 const getAllVideos = catchAsync(async (req, res) => {
   const filter = pick(req.query, []);
@@ -15,10 +15,9 @@ const getAllVideos = catchAsync(async (req, res) => {
 
 const getVideo = catchAsync(async (req, res) => {
   const { fileId } = req.params;
-  const { range } = req.headers;
-  const CHUNKSIZE = 10 ** 6;
-  if (!range) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Range of video not found');
+  let videoRange = req.headers.range;
+  if (!videoRange) {
+    videoRange = 'bytes=0-';
   }
   const video = await videoService.getVideo(fileId);
   if (!video) {
@@ -26,10 +25,18 @@ const getVideo = catchAsync(async (req, res) => {
   }
   const fileLocation = getVideoFileLocation(fileId);
   const videoSize = fs.statSync(fileLocation).size;
-  const headers = getStreamHeader(range, CHUNKSIZE, videoSize);
+  const headers = getStreamHeader(videoRange, videoSize);
   res.writeHead(206, headers);
   const stream = await videoService.getVideoStream(fileId);
   stream.pipe(res);
+});
+
+const viewVideo = catchAsync(async (req, res) => {
+  const { fileId } = req.params;
+  const video = await videoService.getVideo(fileId);
+  if (!video) throw new ApiError(httpStatus.NOT_FOUND, 'video not found');
+  const stream = await videoService.getVideoByNoRange(fileId);
+  res.pipe(stream);
 });
 
 const uploadVideo = catchAsync(async (req, res) => {
@@ -38,9 +45,12 @@ const uploadVideo = catchAsync(async (req, res) => {
   if (!file) throw new ApiError(httpStatus.NOT_FOUND, 'Cannot upload video');
   if (!thumbnail) throw new ApiError(httpStatus.NOT_FOUND, 'Cannot upload thumbnail');
   if (!title || !description) throw new ApiError(httpStatus.NOT_FOUND, 'Cannot upload video information');
+  const fileId = file[0].filename;
+  const videoUrl = getVideoUrl(fileId);
   const payload = {
-    fileId: file[0].filename,
+    fileId,
     thumbnailId: thumbnail[0].filename,
+    videoUrl,
     title,
     description,
   };
@@ -48,8 +58,16 @@ const uploadVideo = catchAsync(async (req, res) => {
   res.send(video);
 });
 
+const getVideoById = catchAsync(async (req, res) => {
+  const videoInfo = await videoService.getVideoById(req.params.id);
+  if (!videoInfo) throw new ApiError(httpStatus.NOT_FOUND, 'video info not found');
+  res.send(videoInfo);
+});
+
 module.exports = {
   getAllVideos,
   getVideo,
+  viewVideo,
   uploadVideo,
+  getVideoById,
 };

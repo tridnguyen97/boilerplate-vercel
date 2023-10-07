@@ -19,6 +19,10 @@ router
 
 router.route('/:fileId').get(videoController.getVideo);
 
+router.route('/:id/metadata').get(videoController.getVideoById);
+
+router.route('/view/:fileId').get(videoController.viewVideo);
+
 module.exports = router;
 
 /**
