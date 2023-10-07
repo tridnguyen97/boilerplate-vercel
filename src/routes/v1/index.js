@@ -6,6 +6,7 @@ const videoRoute = require('./video.route');
 const contactRoute = require('./contact.route');
 const categoryRoute = require('./category.route');
 const friendRoute = require('./friend.route');
+const mediaRoute = require('./media.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -34,6 +35,10 @@ const defaultRoutes = [
   {
     path: '/friends',
     route: friendRoute,
+  },
+  {
+    path: '/media',
+    route: mediaRoute,
   },
 ];
 
