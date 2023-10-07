@@ -20,9 +20,9 @@ const mediaFilter = (req, file, cb) => {
   }
 };
 
-const mediaUpload = multer({
+const mediaChatUpload = multer({
   storage: mediaStorage,
   fileFilter: mediaFilter,
 });
 
-module.exports = mediaUpload;
+module.exports = mediaChatUpload;

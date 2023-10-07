@@ -1,3 +1,5 @@
+const config = require('../config/config');
+
 const getStart = (range) => {
   return Number(range.replace(/\D/g, ''));
 };
@@ -23,7 +25,12 @@ const getVideoFileLocation = (fileId) => {
   return `media/videos/${fileId}`;
 };
 
+const getVideoUrl = (videoId) => {
+  return `${config.host_url}/videos/view/${videoId}`;
+};
+
 module.exports = {
   getStreamHeader,
   getVideoFileLocation,
+  getVideoUrl,
 };
