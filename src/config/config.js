@@ -25,6 +25,7 @@ const envVarsSchema = Joi.object()
     EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
     DATABASE_URL: Joi.string().description('database connection string'),
     LOGGER_PATH: Joi.string().description('Log directory'),
+    HOST_URL: Joi.string().description('URL of current host'),
   })
   .unknown();
 
@@ -65,4 +66,5 @@ module.exports = {
   },
   db_url: envVars.DATABASE_URL,
   log_path: envVars.LOGGER_PATH,
+  host_url: envVars.HOST_URL,
 };
