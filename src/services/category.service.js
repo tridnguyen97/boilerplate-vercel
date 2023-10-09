@@ -39,10 +39,20 @@ const deleteCategory = async (id) => {
     where: { id },
   });
 };
+// rawIds: '[1, 2]'
+const findCategoryByRawIds = async (rawIds) => {
+  const ids = JSON.parse(rawIds);
+  return ids.map((id) => {
+    return prisma.categories.findUnique({
+      where: id,
+    });
+  });
+};
 
 module.exports = {
   getCategoryById,
   getAllCategories,
+  findCategoryByRawIds,
   createCategory,
   updateCategory,
   deleteCategory,
