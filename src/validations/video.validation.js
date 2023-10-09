@@ -6,6 +6,7 @@ const createVideo = {
     thumbnail: Joi.string(),
     title: Joi.string().required(),
     description: Joi.string(),
+    categories: Joi.array(),
   }),
 };
 

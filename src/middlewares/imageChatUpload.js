@@ -5,8 +5,6 @@ const logger = require('../config/logger');
 const mediaStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === 'video') {
-      logger.info(`files: ${file}`);
-
       cb(null, 'media/videos');
     } else if (file.fieldname === 'image') {
       cb(null, 'media/images');
@@ -14,12 +12,11 @@ const mediaStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const ext = file.mimetype.split('/')[1];
-    cb(null, `chatvideo-${Date.now()}.${ext}`);
+    cb(null, `chatimg-${Date.now()}.${ext}`);
   },
 });
 
 const mediaFilter = (req, file, cb) => {
-  logger.info(`files: ${file}`);
   if (file.fieldname === 'image') {
     if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
       // check file type to be png, jpeg, or jpg
@@ -37,10 +34,9 @@ const mediaFilter = (req, file, cb) => {
   }
 };
 
-const mediaChatUpload = multer({
+const imageChatUpload = multer({
   storage: mediaStorage,
   fileFilter: mediaFilter,
-  limits: { fieldSize: 100 * 1024 * 1024 },
 });
 
-module.exports = mediaChatUpload;
+module.exports = imageChatUpload;

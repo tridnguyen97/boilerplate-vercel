@@ -13,15 +13,20 @@ router
       { name: 'file', maxCount: 1 },
       { name: 'title', maxCount: 1 },
       { name: 'description', maxCount: 1 },
+      { name: 'categories', maxCount: 1 },
     ]),
     videoController.uploadVideo
   );
 
-router.route('/:fileId').get(videoController.getVideo);
+router.route('/:id').patch(videoController.updateVideoDetail).delete(videoController.deleteVideoById);
 
 router.route('/:id/metadata').get(videoController.getVideoById);
 
-router.route('/view/:fileId').get(videoController.viewVideo);
+router.route('/view/:fileId').get(videoController.getVideo);
+
+router.route('/search/:keyword').get(videoController.searchVideo);
+
+router.route('/thumbnail/:thumbnailId').get(videoController.getThumbnailById);
 
 module.exports = router;
 

@@ -4,11 +4,12 @@ const path = require('path');
 const router = express.Router();
 const { mediaController } = require('../../controllers');
 const mediaChatUpload = require('../../middlewares/mediaChatUpload');
+const imageChatUpload = require('../../middlewares/imageChatUpload');
 
 router.use(express.static(path.join(__dirname, 'media/images/chat')));
 
 router.route('/image').post(
-  mediaChatUpload.fields([
+  imageChatUpload.fields([
     { name: 'image', maxCount: 1 },
     { name: 'name', maxCount: 1 },
     { name: 'userId', maxCount: 1 },

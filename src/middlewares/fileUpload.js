@@ -1,15 +1,21 @@
 const multer = require('multer');
 
+const { maxFileSize: maxFilesize } = multer();
+
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     // setting destination of uploading files
     if (file.fieldname === 'file') {
       // if uploading file
-      cb(null, 'media/videos');
+      cb(null, './images');
     } else if (file.fieldname === 'thumbnail') {
       // else uploading thumbnail
       cb(null, 'media/images');
     }
+  },
+  filename: (req, file, callback) => {
+    const ext = file.mimetype.split('/')[1];
+    callback(null, `image-${Date.now()}.${ext}`);
   },
 });
 
@@ -36,6 +42,9 @@ const fileFilter = (req, file, cb) => {
 const fileUpload = multer({
   storage: fileStorage,
   fileFilter,
+  maxFilesize,
+  uploadDirectory: './images',
+  limits: 1000 * 1000,
 });
 
 module.exports = fileUpload;
