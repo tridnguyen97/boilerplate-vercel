@@ -32,13 +32,42 @@ const isPasswordMatch = async (userPassword, password) => {
 };
 
 /**
+ * Check if user is taken
+ * @param {string} user - The user's name
+ * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
+ * @returns {Promise<boolean>}
+ */
+const isNameTaken = async (username, excludeUserId) => {
+  const user = await prisma.users.findUnique({
+    where: {
+      name: username,
+      NOT: {
+        id: excludeUserId !== undefined ? excludeUserId : undefined,
+      },
+    },
+  });
+  return !!user;
+};
+
+/**
+ * Get user by name
+ * @param {ObjectId} name
+ * @returns {Promise<User>}
+ */
+const getUserByName = async (name) => {
+  return prisma.users.findUnique({
+    where: { name },
+  });
+};
+
+/**
  * Create a user
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
-  if (await isEmailTaken(userBody.email)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  if (await isNameTaken(userBody.name)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'username already taken');
   }
   // eslint-disable-next-line no-param-reassign
   userBody.password = await bcrypt.hash(userBody.password, 8);
@@ -149,6 +178,7 @@ module.exports = {
   getUsers,
   getUserById,
   getUserByEmail,
+  getUserByName,
   updateUserById,
   deleteUserById,
   createAnonUser,

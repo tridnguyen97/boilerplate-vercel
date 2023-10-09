@@ -20,7 +20,7 @@ model users {
   createdAt       DateTime @default(now())
   email           String   @unique
   isEmailVerified Boolean  @default(false)
-  name            String
+  name            String   @unique
   password        String
   role            Roles    @default(USER)
   updatedAt       DateTime @updatedAt
@@ -53,6 +53,7 @@ model videos {
   thumbnailId String        @unique
   fileId      String        @unique
   videoUrl    String
+  thumbnailUrl  String
   title       String
   description String
   createdAt   DateTime @default(now())
@@ -97,6 +98,8 @@ model anonymousUsers {
 model categories {
   id          String    @id @default(uuid()) @db.Uuid
   name        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   videos      categoriesOnVideos[]
 }
 
@@ -138,6 +141,13 @@ model chatMedia {
   fileName  String
   createdAt DateTime @default(now())
   createdBy anonymousUsers @relation(fields: [userId], references: [id])
-  userId    String   @db.Uuid
-  type      String
+  userId    String   @db.Uuid 
+  type      String 
+}
+
+model lottery {
+  id      String @id @default(uuid()) @db.Uuid
+  number  Int?
+  color   String?
+  type    Int?
 }
