@@ -28,7 +28,13 @@ app.use(helmet());
 app.use(express.json());
 
 // parse urlencoded request body
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: '10000mb',
+    parameterLimit: 1000000,
+  })
+);
 
 // sanitize request data
 app.use(xss());
