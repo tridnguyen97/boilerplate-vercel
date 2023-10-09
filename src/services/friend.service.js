@@ -11,12 +11,22 @@ const getFriendsList = async (userId) => {
       id: true,
       followedBy: {
         select: {
-          followerId: true,
+          follower: {
+            select: {
+              nickname: true,
+              avatar: true,
+            },
+          },
         },
       },
       following: {
         select: {
-          followingId: true,
+          following: {
+            select: {
+              nickname: true,
+              avatar: true,
+            },
+          },
         },
       },
     },
