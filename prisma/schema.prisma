@@ -146,8 +146,43 @@ model chatMedia {
 }
 
 model lottery {
-  id      String @id @default(uuid()) @db.Uuid
+  id    Int @id @default(autoincrement())
   number  Int?
-  color   String?
+  color   String? @db.VarChar(45)
   type    Int?
+  @@map("tb_lotery")
+}
+
+model chartLottery {
+  id Int @id @default(autoincrement())
+  number Int?
+  time  Int?
+  color String? @db.VarChar(45)
+  type Int?
+  createdAt DateTime @default(now()) @map("created_at")
+  idLottery Int?
+  orderBig  Float?
+  orderSmall Float?
+  order1 Float?
+  order2 Float?
+  order0 Float?
+  order3 Float?
+  order4 Float?
+  order5 Float?
+  order6 Float?
+  order7 Float?
+  order8 Float?
+  order9 Float?
+  orderViolet Float?
+  orderGreen Float?
+  orderRed Float?
+  closeNumber String? @db.VarChar(45)
+  @@map("tb_chart_lotery")
+}
+
+model configLottery {
+  id  Int @id @default(autoincrement())
+  name String? @db.VarChar(50)
+  value Float?
+  @@map("tb_config")
 }
