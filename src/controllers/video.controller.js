@@ -118,8 +118,6 @@ const deleteVideoById = catchAsync(async (req, res) => {
 });
 
 const getVideosByCategories = catchAsync(async (req, res) => {
-  console.log('body', JSON.stringify(req.body));
-  console.log('query', JSON.stringify(req.query.type));
   const filter = pick(req.query, []);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const videos = await videoService.findVideoByCategories(filter, options, req.body.categories, req.query.type);

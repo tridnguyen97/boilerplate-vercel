@@ -133,12 +133,10 @@ const updateThumbnailByVideoId = async (videoId, thumbnailBody) => {
 };
 
 const findVideoByCategories = async (filter, options, categoryIds, queryType) => {
-  console.log(JSON.stringify(queryFindCategoriesList(categoryIds, queryType)));
   const enhancedFilter = {
     categories: queryFindCategoriesList(categoryIds, queryType),
     ...filter,
   };
-  console.log(JSON.stringify(enhancedFilter));
   return prisma.videos.findMany({
     filter: enhancedFilter,
     options,

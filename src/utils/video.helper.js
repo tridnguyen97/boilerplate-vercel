@@ -102,7 +102,6 @@ const queryCreateCategoriesList = async (categoryIds) => {
 };
 
 const queryFindCategoriesList = (categories, queryType) => {
-  console.log(queryType);
   if (queryType === 'name') {
     return {
       some: {
