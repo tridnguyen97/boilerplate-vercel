@@ -55,7 +55,6 @@ const isNameTaken = async (username, excludeUserId) => {
  * @returns {Promise<User>}
  */
 const getUserByName = async (name) => {
-  console.log(name, 'name: ');
   return prisma.users.findUnique({
     where: { name },
   });

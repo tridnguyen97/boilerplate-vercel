@@ -4,3 +4,4 @@ module.exports.videoController = require('./video.controller');
 module.exports.contactController = require('./contact.controller');
 module.exports.categoryController = require('./category.controller');
 module.exports.mediaController = require('./media.controller');
+module.exports.lotteryController = require('./lottery.controller');

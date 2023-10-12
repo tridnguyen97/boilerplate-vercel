@@ -27,6 +27,7 @@ model users {
   tokens          tokens[]
   groups          groups[]
   aid             anonymousUsers?
+  balance         Float         @default(0)
 }
 
 enum tokenTypes {
@@ -154,35 +155,49 @@ model lottery {
 }
 
 model chartLottery {
-  id Int @id @default(autoincrement())
-  number Int?
-  time  Int?
-  color String? @db.VarChar(45)
-  type Int?
-  createdAt DateTime @default(now()) @map("created_at")
-  idLottery Int?
-  orderBig  Float?
-  orderSmall Float?
-  order1 Float?
-  order2 Float?
-  order0 Float?
-  order3 Float?
-  order4 Float?
-  order5 Float?
-  order6 Float?
-  order7 Float?
-  order8 Float?
-  order9 Float?
-  orderViolet Float?
-  orderGreen Float?
-  orderRed Float?
-  closeNumber String? @db.VarChar(45)
+  id           Int      @id @default(autoincrement())
+  number       Int?
+  number2      Int?
+  number3      Int?
+  time         Int?
+  type         Int?
+  createdAt    DateTime @default(now()) @map("created_at")
+  idLottery    Int?
+  orderTalent  Float    @default(0)
+  orderFaint   Float    @default(0)
+  orderEven    Float    @default(0)
+  orderOdd     Float    @default(0)
+  closeNumber  String?  @db.VarChar(45)
+  closeNumber2 String?  @db.VarChar(45)
+  closeNumber3 String?  @db.VarChar(45)
+  sessionId    String?  @db.VarChar(45)
+  name         String?  @db.VarChar(45)
+
   @@map("tb_chart_lotery")
 }
 
 model configLottery {
-  id  Int @id @default(autoincrement())
-  name String? @db.VarChar(50)
+  id    Int     @id @default(autoincrement())
+  name  String? @db.VarChar(50)
   value Float?
   @@map("tb_config")
+}
+
+model orderLottery {
+  id             Int      @id @default(autoincrement())
+  balance        Int?
+  userid         String?  @db.Uuid
+  idChartLottery Int?
+  time           Int?
+  name           String?  @db.VarChar(45)
+  createdAt      DateTime @default(now()) @map("created_at")
+  profit         Int?
+  status         String?  @default("PENDDING") @db.VarChar(15)
+  orderTalent    Float    @default(0)
+  orderFaint     Float    @default(0)
+  orderEven      Float    @default(0)
+  orderOdd       Float    @default(0)
+  userName       String?  @db.VarChar(45)
+
+  @@map("tb_order")
 }

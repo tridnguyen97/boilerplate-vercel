@@ -4,6 +4,11 @@ const randomCloseLottery = async () => {
   return Math.floor(Math.random() * max + min);
 };
 
+const getLocalUTCTime = (time) => {
+  return time;
+};
+
 module.exports = {
   randomCloseLottery,
+  getLocalUTCTime,
 };

@@ -7,6 +7,7 @@ const contactRoute = require('./contact.route');
 const categoryRoute = require('./category.route');
 const friendRoute = require('./friend.route');
 const mediaRoute = require('./media.route');
+const lotteryRoute = require('./lottery.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -39,6 +40,10 @@ const defaultRoutes = [
   {
     path: '/media',
     route: mediaRoute,
+  },
+  {
+    path: '/lottery',
+    route: lotteryRoute,
   },
 ];
 

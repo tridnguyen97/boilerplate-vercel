@@ -1,9 +1,13 @@
 const app = require('./app');
 const config = require('./config/config');
 const logger = require('./config/logger');
+const { cronLottery } = require('./common/cronJobLottery');
 
 const server = app.listen(config.port, () => {
   logger.info(`Listening to port ${config.port}`);
+  // eslint-disable-next-line global-require
+  const io = require('socket.io')(server);
+  cronLottery(io);
 });
 
 const exitHandler = () => {
