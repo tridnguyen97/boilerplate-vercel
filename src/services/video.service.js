@@ -9,6 +9,7 @@ const {
   selectCategories,
   removeFileSync,
   getFileAbsPath,
+  queryFindCategoriesList,
 } = require('../utils/video.helper');
 const ApiError = require('../utils/ApiError');
 
@@ -131,6 +132,20 @@ const updateThumbnailByVideoId = async (videoId, thumbnailBody) => {
   });
 };
 
+const findVideoByCategories = async (filter, options, categoryIds, queryType) => {
+  console.log(JSON.stringify(queryFindCategoriesList(categoryIds, queryType)));
+  const enhancedFilter = {
+    categories: queryFindCategoriesList(categoryIds, queryType),
+    ...filter,
+  };
+  console.log(JSON.stringify(enhancedFilter));
+  return prisma.videos.findMany({
+    filter: enhancedFilter,
+    options,
+    select: selectCategories(),
+  });
+};
+
 module.exports = {
   getVideoStream,
   getVideo,
@@ -140,6 +155,7 @@ module.exports = {
   createVideo,
   getVideoById,
   findVideoByName,
+  findVideoByCategories,
   updateVideoById,
   updateThumbnailByVideoId,
   deleteVideoById,

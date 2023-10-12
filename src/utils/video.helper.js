@@ -101,6 +101,31 @@ const queryCreateCategoriesList = async (categoryIds) => {
   };
 };
 
+const queryFindCategoriesList = (categories, queryType) => {
+  console.log(queryType);
+  if (queryType === 'name') {
+    return {
+      some: {
+        category: {
+          name: {
+            in: categories,
+          },
+        },
+      },
+    };
+  }
+  if (queryType === 'ids') {
+    return {
+      some: {
+        category: {
+          id: {
+            in: categories,
+          },
+        },
+      },
+    };
+  }
+};
 const selectCategories = () => {
   return {
     id: true,
@@ -153,6 +178,7 @@ module.exports = {
   getThumbnailFileLocation,
   queryCreateCategoriesList,
   queryUpdateCategoriesList,
+  queryFindCategoriesList,
   selectCategories,
   removeFile,
   removeFileSync,

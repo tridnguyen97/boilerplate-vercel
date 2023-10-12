@@ -18,7 +18,11 @@ router
     videoController.uploadVideo
   );
 
+router.route('/categories').post(videoController.getVideosByCategories);
+
 router.route('/view/:fileId').get(videoController.getVideo);
+
+router.route('/thumbnail/:thumbnailId').get(videoController.getThumbnailById);
 
 router.route('/search/:keyword').get(videoController.searchVideo);
 
@@ -33,12 +37,6 @@ router.route('/update/thumbnail').post(
 router.route('/:id').patch(videoController.updateVideoDetail).delete(videoController.deleteVideoById);
 
 router.route('/:id/metadata').get(videoController.getVideoById);
-
-router.route('/view/:fileId').get(videoController.getVideo);
-
-router.route('/search/:keyword').get(videoController.searchVideo);
-
-router.route('/thumbnail/:thumbnailId').get(videoController.getThumbnailById);
 
 module.exports = router;
 

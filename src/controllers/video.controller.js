@@ -29,6 +29,7 @@ const getVideo = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Video not found');
   }
   const fileLocation = getVideoFileLocation(fileId);
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   const videoSize = fs.statSync(fileLocation).size;
   const headers = getStreamHeader(videoRange, videoSize);
   res.writeHead(206, headers);
@@ -116,9 +117,20 @@ const deleteVideoById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const getVideosByCategories = catchAsync(async (req, res) => {
+  console.log('body', JSON.stringify(req.body));
+  console.log('query', JSON.stringify(req.query.type));
+  const filter = pick(req.query, []);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const videos = await videoService.findVideoByCategories(filter, options, req.body.categories, req.query.type);
+  if (!videos) throw new ApiError(httpStatus.NOT_FOUND, 'videos not found');
+  res.send(videos);
+});
+
 module.exports = {
   getAllVideos,
   getVideo,
+  getVideosByCategories,
   viewVideo,
   viewMobileVideo,
   uploadVideo,
