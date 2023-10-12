@@ -1,6 +1,9 @@
 const path = require('path');
+const fs = require('fs');
+const httpStatus = require('http-status');
 const config = require('../config/config');
 const logger = require('../config/logger');
+const ApiError = require('./ApiError');
 
 const getStart = (range) => {
   return parseInt(range[0], 10);
@@ -31,6 +34,10 @@ const getVideoFileLocation = (fileId) => {
   return `media/videos/${fileId}`;
 };
 
+const getFileAbsPath = (fileId) => {
+  return path.resolve(getVideoFileLocation(fileId));
+};
+
 const getVideoUrl = (videoId) => {
   return `${config.host_url}/v1/videos/view/${videoId}`;
 };
@@ -43,11 +50,42 @@ const getThumbnailFileLocation = (thumbnailId) => {
   return path.resolve(`media/images/${thumbnailId}`);
 };
 
-const queryCategoriesList = async (categoryIds) => {
+const queryUpdateCategoriesList = async (categoryIds) => {
   let query = {};
   let ids = [];
-  if (ids instanceof Array) ids = categoryIds;
-  if (ids instanceof String) ids = JSON.parse(categoryIds);
+  logger.info(`query category ids ${categoryIds}`);
+  logger.info(`type of category ids ${typeof categoryIds}`);
+  if (categoryIds instanceof Array) ids = categoryIds;
+  if (typeof categoryIds === 'string') ids = JSON.parse(categoryIds);
+  logger.info(`ids ${ids}`);
+  if (!ids || !ids.length)
+    return {
+      create: [],
+    };
+  query = ids.map((id) => {
+    return {
+      category: {
+        connect: {
+          id,
+        },
+      },
+    };
+  });
+  console.log(`query: ${JSON.stringify(query)}`);
+  return {
+    deleteMany: {},
+    create: query,
+  };
+};
+
+const queryCreateCategoriesList = async (categoryIds) => {
+  let query = {};
+  let ids = [];
+  logger.info(`query category ids ${categoryIds}`);
+  logger.info(`type of category ids ${typeof categoryIds}`);
+  if (categoryIds instanceof Array) ids = categoryIds;
+  if (typeof categoryIds === 'string') ids = JSON.parse(categoryIds);
+  logger.info(`ids ${ids}`);
   if (!ids || !ids.length)
     return {
       create: [],
@@ -72,6 +110,7 @@ const selectCategories = () => {
     id: true,
     thumbnailId: true,
     fileId: true,
+    thumbnailUrl: true,
     videoUrl: true,
     title: true,
     description: true,
@@ -80,6 +119,7 @@ const selectCategories = () => {
         category: {
           select: {
             name: true,
+            id: true,
           },
         },
       },
@@ -87,12 +127,37 @@ const selectCategories = () => {
   };
 };
 
+const removeFile = (filePath) => {
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      logger.error(`remove file error: ${err}`);
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `Could not delete the file.`);
+    }
+  });
+};
+
+const removeFileSync = (filePath) => {
+  try {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    fs.unlinkSync(filePath);
+    logger.info('File is deleted.');
+  } catch (err) {
+    logger.error(`remove file error: ${err}`);
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `Could not delete the file.`);
+  }
+};
+
 module.exports = {
   getStreamHeader,
   getVideoFileLocation,
+  getFileAbsPath,
   getVideoUrl,
   getThumbnailUrl,
   getThumbnailFileLocation,
-  queryCategoriesList,
+  queryCreateCategoriesList,
+  queryUpdateCategoriesList,
   selectCategories,
+  removeFile,
+  removeFileSync,
 };

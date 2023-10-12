@@ -3,9 +3,12 @@ const httpStatus = require('http-status');
 const prisma = require('../prisma');
 const {
   getVideoFileLocation,
-  queryCategoriesList,
+  queryCreateCategoriesList,
+  queryUpdateCategoriesList,
   getThumbnailFileLocation,
   selectCategories,
+  removeFileSync,
+  getFileAbsPath,
 } = require('../utils/video.helper');
 const ApiError = require('../utils/ApiError');
 
@@ -44,7 +47,7 @@ const createVideo = async (videoBody) => {
   const { categoriesId, ...payload } = videoBody;
   console.log(categoriesId);
   console.log(`request body: ${JSON.stringify(videoBody)}`);
-  const query = await queryCategoriesList(categoriesId);
+  const query = await queryCreateCategoriesList(categoriesId);
   console.log(query);
   return prisma.videos.create({
     data: {
@@ -56,6 +59,7 @@ const createVideo = async (videoBody) => {
 };
 
 const getVideoById = async (videoId) => {
+  console.log('videoId', videoId);
   return prisma.videos.findUnique({
     where: {
       id: videoId,
@@ -81,6 +85,18 @@ const getThumbnail = async (thumbnailId) => {
 const deleteVideoById = async (videoId) => {
   const video = await getVideoById(videoId);
   if (!video) throw new ApiError(httpStatus.NOT_FOUND, 'Video not found');
+  await prisma.videos.update({
+    where: {
+      id: video.id,
+    },
+    data: {
+      categories: {
+        deleteMany: {},
+      },
+    },
+  });
+  const videoPath = getFileAbsPath(video.fileId);
+  removeFileSync(videoPath);
   return prisma.videos.delete({
     where: {
       id: video.id,
@@ -95,7 +111,7 @@ const updateVideoById = async (videoId, videoBody) => {
   const video = await getVideoById(videoId);
   if (!video) throw new ApiError(httpStatus.NOT_FOUND, 'Video not found');
   if (categoriesId && categoriesId.length) {
-    query = await queryCategoriesList(categoriesId);
+    query = await queryUpdateCategoriesList(categoriesId);
   }
   return prisma.videos.update({
     where: {
@@ -105,6 +121,16 @@ const updateVideoById = async (videoId, videoBody) => {
       categories: query,
       ...body,
     },
+    select: selectCategories(),
+  });
+};
+
+const updateThumbnailByVideoId = async (videoId, thumbnailBody) => {
+  return prisma.videos.update({
+    where: {
+      id: videoId,
+    },
+    data: thumbnailBody,
     select: selectCategories(),
   });
 };
@@ -119,5 +145,6 @@ module.exports = {
   getVideoById,
   findVideoByName,
   updateVideoById,
+  updateThumbnailByVideoId,
   deleteVideoById,
 };
