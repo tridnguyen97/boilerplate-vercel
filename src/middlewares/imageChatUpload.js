@@ -4,8 +4,8 @@ const logger = require('../config/logger');
 
 const mediaStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    if (file.fieldname === 'video') {
-      cb(null, 'media/videos');
+    if (file.fieldname === 'avatar') {
+      cb(null, 'media/chat/avatars');
     } else if (file.fieldname === 'image') {
       cb(null, 'media/images');
     }
@@ -24,8 +24,8 @@ const mediaFilter = (req, file, cb) => {
     } else {
       cb(null, false); // else fails
     }
-  } else if (file.fieldname === 'video') {
-    if (file.mimetype === 'video/mp4' || file.mimetype === 'video/mkv') {
+  } else if (file.fieldname === 'avatar') {
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
       // check file type to be pdf, doc, or docx
       cb(null, true);
     } else {
