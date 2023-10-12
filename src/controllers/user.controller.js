@@ -3,6 +3,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
+const { getAvatarUrl, getAvatarAbsPath } = require('../utils/media.helper');
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -51,6 +52,20 @@ const getAnonUser = catchAsync(async (req, res) => {
   res.send(anonUser);
 });
 
+const updateAvatar = catchAsync(async (req, res) => {
+  const user = await userService.getAnonUserByDeviceId(req.body.deviceId);
+  if (!req.files.avatar) throw new ApiError(httpStatus.NOT_FOUND, 'Avatar required');
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User chat not found');
+  console.log('avatar', req.files.avatar[0]);
+  const avatarUrl = getAvatarUrl(req.files.avatar[0].filename);
+  const updatedUser = await userService.updateAnonUserWithAvatar(user.deviceId, avatarUrl);
+  res.send(updatedUser);
+});
+
+const getAvatar = catchAsync(async (req, res) => {
+  res.sendFile(getAvatarAbsPath(req.params.avatarName));
+});
+
 module.exports = {
   createUser,
   getUsers,
@@ -59,4 +74,6 @@ module.exports = {
   deleteUser,
   createAnonUser,
   getAnonUser,
+  getAvatar,
+  updateAvatar,
 };

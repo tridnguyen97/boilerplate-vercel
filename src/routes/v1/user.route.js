@@ -3,6 +3,7 @@ const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const userValidation = require('../../validations/user.validation');
 const userController = require('../../controllers/user.controller');
+const imageChatUpload = require('../../middlewares/imageChatUpload');
 
 const router = express.Router();
 
@@ -20,6 +21,16 @@ router
 router.route('/anon').post(userController.createAnonUser);
 
 router.route('/anon/list/:name').get(userController.getAnonUser);
+
+router.route('/anon/avatar').post(
+  imageChatUpload.fields([
+    { name: 'avatar', maxCount: 1 },
+    { name: 'deviceId', maxCount: 1 },
+  ]),
+  userController.updateAvatar
+);
+
+router.route('/anon/avatar/:avatarName').get(userController.getAvatar);
 module.exports = router;
 
 /**

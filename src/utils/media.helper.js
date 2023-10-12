@@ -1,14 +1,15 @@
 const path = require('path');
+const config = require('../config/config');
 
-const getMediaFile = (filename) => {
-  return path.resolve(`media/images/chat/${filename}`);
+const getAvatarAbsPath = (avatarName) => {
+  return path.resolve(`media/chat/avatar/${avatarName}`);
 };
 
-const getMediaVideo = (videoName) => {
-  return path.resolve(`media/videos/${videoName}`);
+const getAvatarUrl = (avatarName) => {
+  return `${config.host_url}/v1/users/anon/avatar/${avatarName}`;
 };
 
 module.exports = {
-  getMediaFile,
-  getMediaVideo,
+  getAvatarAbsPath,
+  getAvatarUrl,
 };

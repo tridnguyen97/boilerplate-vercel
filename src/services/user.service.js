@@ -55,6 +55,7 @@ const isNameTaken = async (username, excludeUserId) => {
  * @returns {Promise<User>}
  */
 const getUserByName = async (name) => {
+  console.log(name, 'name: ');
   return prisma.users.findUnique({
     where: { name },
   });
@@ -172,6 +173,25 @@ const getAnonUserByName = async (filter, options) => {
   });
 };
 
+const updateAnonUserWithAvatar = async (deviceId, avatarUrl) => {
+  return prisma.anonymousUsers.update({
+    where: {
+      deviceId,
+    },
+    data: {
+      avatar: avatarUrl,
+    },
+  });
+};
+
+const getAnonUserByDeviceId = async (deviceId) => {
+  return prisma.anonymousUsers.findUnique({
+    where: {
+      deviceId,
+    },
+  });
+};
+
 module.exports = {
   isPasswordMatch,
   createUser,
@@ -183,4 +203,6 @@ module.exports = {
   deleteUserById,
   createAnonUser,
   getAnonUserByName,
+  getAnonUserByDeviceId,
+  updateAnonUserWithAvatar,
 };
