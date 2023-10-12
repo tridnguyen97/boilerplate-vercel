@@ -13,6 +13,7 @@ const {
 const ApiError = require('../utils/ApiError');
 
 const getVideoStream = async (fileId, start, end) => {
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   const videoStream = fs.createReadStream(`media/videos/${fileId}`, { start, end });
   return videoStream;
 };
@@ -35,7 +36,7 @@ const getVideo = async (videoId) => {
 
 const getVideoByNoRange = async (videoId, cb) => {
   const dest = getVideoFileLocation(videoId);
-  console.log(dest);
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   const video = fs.createReadStream(dest);
   video.on('finish', () => {
     video.close(cb);
@@ -45,10 +46,7 @@ const getVideoByNoRange = async (videoId, cb) => {
 
 const createVideo = async (videoBody) => {
   const { categoriesId, ...payload } = videoBody;
-  console.log(categoriesId);
-  console.log(`request body: ${JSON.stringify(videoBody)}`);
   const query = await queryCreateCategoriesList(categoriesId);
-  console.log(query);
   return prisma.videos.create({
     data: {
       categories: query,
@@ -59,7 +57,6 @@ const createVideo = async (videoBody) => {
 };
 
 const getVideoById = async (videoId) => {
-  console.log('videoId', videoId);
   return prisma.videos.findUnique({
     where: {
       id: videoId,
@@ -107,7 +104,6 @@ const deleteVideoById = async (videoId) => {
 const updateVideoById = async (videoId, videoBody) => {
   let query = {};
   const { categoriesId, ...body } = videoBody;
-  console.log(categoriesId);
   const video = await getVideoById(videoId);
   if (!video) throw new ApiError(httpStatus.NOT_FOUND, 'Video not found');
   if (categoriesId && categoriesId.length) {

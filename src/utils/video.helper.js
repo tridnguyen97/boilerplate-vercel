@@ -25,8 +25,6 @@ const getStreamHeader = (range, videoSize) => {
     'Content-Length': contentLength,
     'Content-Type': 'video/mp4',
   };
-  console.log(start, end, contentLength);
-
   return headers;
 };
 
@@ -71,7 +69,6 @@ const queryUpdateCategoriesList = async (categoryIds) => {
       },
     };
   });
-  console.log(`query: ${JSON.stringify(query)}`);
   return {
     deleteMany: {},
     create: query,
@@ -99,7 +96,6 @@ const queryCreateCategoriesList = async (categoryIds) => {
       },
     };
   });
-  console.log(`query: ${JSON.stringify(query)}`);
   return {
     create: query,
   };

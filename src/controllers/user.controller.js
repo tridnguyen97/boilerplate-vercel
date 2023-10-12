@@ -56,7 +56,6 @@ const updateAvatar = catchAsync(async (req, res) => {
   const user = await userService.getAnonUserByDeviceId(req.body.deviceId);
   if (!req.files.avatar) throw new ApiError(httpStatus.NOT_FOUND, 'Avatar required');
   if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User chat not found');
-  console.log('avatar', req.files.avatar[0]);
   const avatarUrl = getAvatarUrl(req.files.avatar[0].filename);
   const updatedUser = await userService.updateAnonUserWithAvatar(user.deviceId, avatarUrl);
   res.send(updatedUser);

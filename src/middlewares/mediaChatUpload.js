@@ -1,5 +1,4 @@
 const multer = require('multer');
-const path = require('path');
 const logger = require('../config/logger');
 
 const mediaStorage = multer.diskStorage({
