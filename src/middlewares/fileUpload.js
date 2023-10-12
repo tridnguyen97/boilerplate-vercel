@@ -11,6 +11,8 @@ const fileStorage = multer.diskStorage({
     } else if (file.fieldname === 'thumbnail') {
       // else uploading thumbnail
       cb(null, 'media/images');
+    } else if (file.fieldname === 'thumbnailId') {
+      cb(null, 'media/images');
     }
   },
   filename: (req, file, callback) => {
@@ -29,6 +31,14 @@ const fileFilter = (req, file, cb) => {
       cb(null, false); // else fails
     }
   } else if (file.fieldname === 'thumbnail') {
+    // else uploading image
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+      // check file type to be png, jpeg, or jpg
+      cb(null, true);
+    } else {
+      cb(null, false); // else fails
+    }
+  } else if (file.fieldname === 'thumbnailId') {
     // else uploading image
     if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
       // check file type to be png, jpeg, or jpg

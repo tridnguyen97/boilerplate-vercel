@@ -18,6 +18,18 @@ router
     videoController.uploadVideo
   );
 
+router.route('/view/:fileId').get(videoController.getVideo);
+
+router.route('/search/:keyword').get(videoController.searchVideo);
+
+router.route('/update/thumbnail').post(
+  fileUpload.fields([
+    { name: 'thumbnailId', maxCount: 1 },
+    { name: 'videoId', maxCount: 1 },
+  ]),
+  videoController.updateThumbnailById
+);
+
 router.route('/:id').patch(videoController.updateVideoDetail).delete(videoController.deleteVideoById);
 
 router.route('/:id/metadata').get(videoController.getVideoById);

@@ -4,7 +4,14 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { videoService } = require('../services');
-const { getStreamHeader, getVideoFileLocation, getVideoUrl, getThumbnailUrl } = require('../utils/video.helper');
+const {
+  getStreamHeader,
+  getVideoFileLocation,
+  getVideoUrl,
+  getThumbnailUrl,
+  getVideoAbsLocation,
+  getMobileVideoUrl,
+} = require('../utils/video.helper');
 
 const getAllVideos = catchAsync(async (req, res) => {
   const filter = pick(req.query, []);
@@ -37,6 +44,10 @@ const viewVideo = catchAsync(async (req, res) => {
   res.pipe(stream);
 });
 
+const viewMobileVideo = catchAsync(async (req, res) => {
+  res.sendFile(getVideoAbsLocation(req.params.fileId));
+});
+
 const uploadVideo = catchAsync(async (req, res) => {
   const { title, description, categoriesId } = req.body;
   const { file, thumbnail } = req.files;
@@ -46,11 +57,13 @@ const uploadVideo = catchAsync(async (req, res) => {
   const fileId = file[0].filename;
   const thumbnailId = thumbnail[0].filename;
   const videoUrl = getVideoUrl(fileId);
+  const mVideoUrl = getMobileVideoUrl(fileId);
   const thumbnailUrl = getThumbnailUrl(thumbnailId);
   const payload = {
     fileId,
     thumbnailId: thumbnail[0].filename,
     videoUrl,
+    mVideoUrl,
     thumbnailUrl,
     title,
     description,
@@ -83,6 +96,21 @@ const getThumbnailById = catchAsync(async (req, res) => {
   res.sendFile(thumbnail);
 });
 
+const updateThumbnailById = catchAsync(async (req, res) => {
+  const { thumbnailId } = req.files;
+  const { videoId } = req.body;
+  if (!thumbnailId) throw new ApiError(httpStatus.NOT_FOUND, 'Required thumbnail file');
+  const video = await videoService.getVideoById(videoId);
+  if (!video) throw new ApiError(httpStatus.NOT_FOUND, 'video not found');
+  const thumbnailName = thumbnailId[0].filename;
+  const thumbnailBody = {
+    thumbnailId: thumbnailName,
+    thumbnailUrl: getThumbnailUrl(thumbnailName),
+  };
+  const updatedVideo = await videoService.updateThumbnailByVideoId(videoId, thumbnailBody);
+  res.send(updatedVideo);
+});
+
 const deleteVideoById = catchAsync(async (req, res) => {
   await videoService.deleteVideoById(req.params.id);
   res.status(httpStatus.NO_CONTENT).send();
@@ -92,10 +120,12 @@ module.exports = {
   getAllVideos,
   getVideo,
   viewVideo,
+  viewMobileVideo,
   uploadVideo,
   getVideoById,
   searchVideo,
   updateVideoDetail,
+  updateThumbnailById,
   getThumbnailById,
   deleteVideoById,
 };
