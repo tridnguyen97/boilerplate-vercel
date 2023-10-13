@@ -63,7 +63,7 @@ const verifyToken = async (token, type) => {
     where: {
       token,
       type,
-      user: payload.sub,
+      userId: payload.sub,
       blacklisted: false,
     },
   });
@@ -126,6 +126,14 @@ const generateVerifyEmailToken = async (user) => {
   return verifyEmailToken;
 };
 
+const deleteTokenById = async (tokenId) => {
+  return prisma.tokens.delete({
+    where: {
+      id: tokenId,
+    },
+  });
+};
+
 module.exports = {
   generateToken,
   saveToken,
@@ -133,4 +141,5 @@ module.exports = {
   generateAuthTokens,
   generateResetPasswordToken,
   generateVerifyEmailToken,
+  deleteTokenById,
 };
