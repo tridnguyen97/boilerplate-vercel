@@ -1,7 +1,10 @@
 const { PrismaClient } = require('@prisma/client');
 const paginate = require('./utils/paginate');
+const config = require('./config/config');
 
-const prisma = new PrismaClient().$extends({
+const prisma = new PrismaClient({
+  datasourceUrl: `postgres://${config.database.username}:${config.database.password}@${config.database.host}:${config.database.port}/${config.database.name}`,
+}).$extends({
   query: {
     $allModels: {
       async findMany({ args, query }) {
