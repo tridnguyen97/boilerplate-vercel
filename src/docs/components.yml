@@ -1,0 +1,146 @@
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        role:
+          type: string
+          enum: [user, admin]
+      example:
+        id: 5ebac534954b54139806c112
+        email: fake@example.com
+        name: fake name
+        role: user
+
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+        expires:
+          type: string
+          format: date-time
+      example:
+        token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg
+        expires: 2020-05-12T16:18:04.793Z
+
+    AuthTokens:
+      type: object
+      properties:
+        access:
+          $ref: '#/components/schemas/Token'
+        refresh:
+          $ref: '#/components/schemas/Token'
+
+    Video:
+      type: object
+      properties:
+        id:
+          type: string
+        fileId:
+          type: string
+        thumbnailId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+      example:
+        id: a1b5b0e0-dbab-4a2f-a95e-67358b94a0a9,
+        thumbnailId: 7d2f9612d26c61e676e8d79105337fdd,
+        fileId: f18f894309361cf37fe110dfccd40fb0,
+        title: live 100ms,
+        description: This is test video
+
+    AnonymousUser:
+      type: object
+      properties:
+        id:
+          type: string
+        nickname:
+          type: string
+        deviceId:
+          type: string
+        userId:
+          type: string
+      example:
+        id: 6e48bbd2-ce18-4c64-9bb0-89a4a5b06e1a,
+        nickname: hongMjAyMy0xMC0wNFQwMToxNzoxMS4zNjla,
+        deviceId: 04c48ca23d0efd92,
+        userId: null
+
+    Category:
+      type: object
+      properties:
+        name: 
+          type: string
+      example:
+        name: drama
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+
+  responses:
+    DuplicateEmail:
+      description: Email already taken
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Email already taken
+    NotInRangeVideo:
+      description: Range of video not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Range of video not found
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 401
+            message: Please authenticate
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 403
+            message: Forbidden
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 404
+            message: Not found
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

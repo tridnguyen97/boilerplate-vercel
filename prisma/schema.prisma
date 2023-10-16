@@ -1,0 +1,205 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Roles {
+  USER  @map("user")
+  ADMIN @map("admin")
+}
+
+model users {
+  id              String   @id @default(uuid()) @db.Uuid
+  createdAt       DateTime @default(now())
+  email           String?   @unique
+  isEmailVerified Boolean  @default(false)
+  name            String   @unique
+  password        String
+  role            Roles    @default(USER)
+  updatedAt       DateTime @updatedAt
+  tokens          tokens[]
+  groups          groups[]
+  aid             anonymousUsers?
+  balance         Float         @default(0)
+}
+
+enum tokenTypes {
+  ACCESS
+  REFRESH
+  REFRESH_PASSWORD
+  VERIFY_EMAIL
+}
+
+model tokens {
+  id          String   @id @default(uuid()) @db.Uuid
+  blacklisted Boolean
+  createdAt   DateTime @default(now())
+  expires     DateTime @db.Timestamp
+  token       String   @unique @db.VarChar(255)
+  type        String
+  updatedAt   DateTime @updatedAt
+  user        users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String   @db.Uuid
+}
+
+model videos {
+  id          String        @id @default(uuid()) @db.Uuid
+  thumbnailId String        @unique
+  fileId      String        @unique
+  videoUrl	  String		@default("")
+  mVideoUrl   String    @default("")
+  thumbnailUrl String   @default("")
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  categories  categoriesOnVideos[]
+}
+
+model groups {
+  id          String        @id @default(uuid()) @db.Uuid
+  name        String
+  owner       users         @relation(fields: [ownerId], references: [id])
+  ownerId     String        @db.Uuid
+  contacts    contacts[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model contacts {
+  id          String   @id @default(uuid()) @db.Uuid
+  user        anonymousUsers?    @relation(fields: [userId], references: [id])
+  userId      String?   @unique @db.Uuid
+  group       groups?   @relation(fields: [groupId], references: [id])
+  groupId     String?   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model anonymousUsers {
+  id          String    @id @default(uuid()) @db.Uuid
+  nickname    String
+  contacts    contacts?
+  avatar	 String?
+  color       String
+  followedBy anonymousFriends[]  @relation("following")
+  following  anonymousFriends[]  @relation("follower")
+  deviceId    String    @unique
+  createdAt   DateTime  @default(now())
+  user        users?    @relation(fields: [userId], references: [id])
+  userId      String?    @unique @db.Uuid
+  imgMsg      chatMedia[]
+}
+
+model categories {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  videos      categoriesOnVideos[]
+}
+
+model categoriesOnVideos {
+  video      videos?     @relation(fields: [videoId], references: [id])
+  videoId    String  @db.Uuid
+  category   categories? @relation(fields: [categoryId], references: [id])
+  categoryId String @db.Uuid 
+  createdAt DateTime @default(now())
+
+  @@id([videoId, categoryId])
+}
+
+model anonymousFriends {
+  follower    anonymousUsers @relation("follower", fields: [followerId], references: [id])
+  followerId  String @db.Uuid
+  following   anonymousUsers @relation("following", fields: [followingId], references: [id])
+  followingId String @db.Uuid
+  relationshipStatus     RelationshipStatus?
+  notificationPreference NotificationPreference?
+  @@id([followerId, followingId])
+}
+
+enum RelationshipStatus {
+  FAMILY
+  FRIEND
+  ACQUAINTANCE
+}
+
+enum NotificationPreference {
+  MUTED_UNTIL_TOMORROW
+  MUTED_FOREVER
+  NORMAL
+}
+
+model chatMedia {
+  id        String @id @default(uuid()) @db.Uuid
+  filePath  String
+  fileName  String
+  createdAt DateTime @default(now())
+  createdBy anonymousUsers  @relation(fields: [userId], references: [id])
+  userId    String   @db.Uuid
+  type      String
+}
+
+model lottery {
+  id    Int @id @default(autoincrement())
+  number  Int?
+  color   String? @db.VarChar(45)
+  type    Int?
+  @@map("tb_lotery")
+}
+
+model chartLottery {
+  id           Int      @id @default(autoincrement())
+  number       Int?
+  number2      Int?
+  number3      Int?
+  time         Int?
+  type         Int?
+  createdAt    DateTime @default(now()) @map("created_at")
+  idLottery    Int?
+  orderTalent  Float    @default(0)
+  orderFaint   Float    @default(0)
+  orderEven    Float    @default(0)
+  orderOdd     Float    @default(0)
+  closeNumber  String?  @db.VarChar(45)
+  closeNumber2 String?  @db.VarChar(45)
+  closeNumber3 String?  @db.VarChar(45)
+  sessionId    String?  @db.VarChar(45)
+  name         String?  @db.VarChar(45)
+
+  @@map("tb_chart_lotery")
+}
+
+model configLottery {
+  id    Int     @id @default(autoincrement())
+  name  String? @db.VarChar(50)
+  value Float?
+  @@map("tb_config")
+}
+
+model orderLottery {
+  id             Int      @id @default(autoincrement())
+  balance        Int?
+  userid         String?  @db.Uuid
+  idChartLottery Int?
+  time           Int?
+  name           String?  @db.VarChar(45)
+  createdAt      DateTime @default(now()) @map("created_at")
+  profit         Int?
+  status         String?  @default("PENDDING") @db.VarChar(15)
+  orderTalent    Float    @default(0)
+  orderFaint     Float    @default(0)
+  orderEven      Float    @default(0)
+  orderOdd       Float    @default(0)
+  userName       String?  @db.VarChar(45)
+
+  @@map("tb_order")
+}
