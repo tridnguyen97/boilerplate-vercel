@@ -6,12 +6,12 @@ const getMediaFile = (filename) => {
 };
 
 const getMediaVideo = (videoName) => {
-    return path.resolve(`media/videos/${videoName}`);
-}
+  return path.resolve(`media/videos/${videoName}`);
+};
 
 const getMediaAudio = (audioName) => {
-  return path.resolve(`media/audios/${audioName}`)
-}
+  return path.resolve(`media/audios/${audioName}`);
+};
 
 const getAvatarAbsPath = (avatarName) => {
   return path.resolve(`media/chat/avatars/${avatarName}`);

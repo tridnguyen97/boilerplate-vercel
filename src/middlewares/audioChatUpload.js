@@ -1,5 +1,4 @@
 const multer = require('multer');
-const path = require('path');
 const logger = require('../config/logger');
 
 const mediaStorage = multer.diskStorage({
@@ -10,18 +9,18 @@ const mediaStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const ext = file.mimetype.split('/')[1];
-    if (ext === 'x-m4a' || ext === 'octet-stream') cb(null,`chataudio-${Date.now()}.m4a`);
+    if (ext === 'x-m4a' || ext === 'octet-stream') cb(null, `chataudio-${Date.now()}.m4a`);
     else cb(null, `chataudio-${Date.now()}.${ext}`);
   },
 });
 
 const mediaFilter = (req, file, cb) => {
-  logger.info(`mime type: ${file.mimetype}`)
+  logger.info(`mime type: ${file.mimetype}`);
   if (file.fieldname === 'audio') {
     if (
       file.mimetype === 'audio/x-m4a' ||
-      file.mimetype === 'audio/mp4'   ||
-      file.mimetype === 'audio/mpeg'  ||
+      file.mimetype === 'audio/mp4' ||
+      file.mimetype === 'audio/mpeg' ||
       file.mimetype === 'application/octet-stream'
     ) {
       // check file type to be png, jpeg, or jpg

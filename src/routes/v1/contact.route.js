@@ -1,94 +1,50 @@
 const express = require('express');
-const fileUpload = require('../../middlewares/fileUpload');
-const videoController = require('../../controllers/video.controller');
+const contactController = require('../../controllers/contact.controller');
 
 const router = express.Router();
 
-router
-  .route('/')
-  .get(videoController.getAllVideos)
-  .post(
-    fileUpload.fields([
-      { name: 'thumbnail', maxCount: 1 },
-      { name: 'file', maxCount: 1 },
-      { name: 'title', maxCount: 1 },
-      { name: 'description', maxCount: 1 },
-    ]),
-    videoController.uploadVideo
-  );
+router.route('/').get(contactController.getAllContacts).post(contactController.createContact);
 
-router.route('/update/thumbnail').post(
-  fileUpload.fields([
-    { name: 'thumbnailId', maxCount: 1 },
-    { name: 'videoId', maxCount: 1 },
-  ]),
-  videoController.updateThumbnailById
-);
-
-router.route('/categories').post(videoController.getVideosByCategories);
-
-router.route('/view/:fileId').get(videoController.viewVideo);
-
-router.route('/search/:keyword').get(videoController.searchVideo);
-
-router.route('/thumbnail').patch(videoController.updateThumbnailById);
-
-router.route('/thumbnail/:thumbnailId').get(videoController.getThumbnailById);
-
-router.route('/titles').post(videoController.getVideosByTitle);
-
-router.route('/view/mobile/:fileId').get(videoController.viewMobileVideo);
-
-router.route('/id/:id').patch(videoController.updateVideoDetail).delete(videoController.deleteVideoById);
-
-router.route('/metadata/:id').get(videoController.getVideoById);
+router.route('/groups').get(contactController.getContactGroups).post(contactController.createContactGroup);
 
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: Videos
- *   description: Video management and retrieval
+ *   name: Contacts
+ *   description: Contact management and retrieval
  */
 
 /**
  * @swagger
- * /videos:
+ * /contacts:
  *   post:
- *     summary: Upload a video
- *     description: Users can upload a video.
- *     tags: [Videos]
+ *     summary: Upload a contact
+ *     description: Users can upload a contact.
+ *     tags: [Contacts]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
+ *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - userId
  *             properties:
- *               file:
- *                 type: string
- *                 format: binary
- *               thumbnail:
- *                 type: string
- *                 format: binary
- *               title:
- *                 type: string
- *               description:
+ *               userId:
  *                 type: string
  *             example:
- *               name: Rush Hour 4 [1080p]
- *               thumbnail name: rush-hour-4png
- *               title: Rush Hour 4 Explicit
- *               description: The whole new journey of Carter and Lee
+ *               userId: 5ebac534954b54139806c112
  *     responses:
- *       "200":
- *         description: Video created
+ *       "201":
+ *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Video'
+ *                $ref: '#/components/schemas/User'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -96,32 +52,13 @@ module.exports = router;
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *
+ *
  *   get:
- *     summary: Get all videos
+ *     summary: Get all contacts
  *     description: Only admins can retrieve all users.
- *     tags: [Videos]
+ *     tags: [Contacts]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: sortBy
- *         schema:
- *           type: string
- *         description: sort by query in the form of field:desc/asc (ex. name:asc)
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           minimum: 1
- *         default: 10
- *         description: Maximum number of users
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           minimum: 1
- *           default: 1
- *         description: Page number
  *     responses:
  *       "200":
  *         description: OK
@@ -154,11 +91,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /videos/{id}:
+ * /contacts/groups:
  *   get:
- *     summary: Get a video
+ *     summary: Get group contact of a user
  *     description: Logged in videos can fetch only their own video information. Only admins can fetch other videos.
- *     tags: [Videos]
+ *     tags: [Contacts]
  *     security:
  *       - bearerAuth: []
  *     parameters:

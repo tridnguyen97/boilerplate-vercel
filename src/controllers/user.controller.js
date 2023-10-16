@@ -54,9 +54,9 @@ const getAnonUser = catchAsync(async (req, res) => {
 
 const getAnonUserById = catchAsync(async (req, res) => {
   const user = await userService.getAnonUserByDeviceId(req.params.deviceId);
-  if(!user) throw new ApiError(httpStatus.NOT_FOUND, "chat user not found");
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'chat user not found');
   res.send(user);
-})
+});
 
 const updateAvatar = catchAsync(async (req, res) => {
   const user = await userService.getAnonUserByDeviceId(req.body.deviceId);
@@ -71,6 +71,11 @@ const getAvatar = catchAsync(async (req, res) => {
   res.sendFile(getAvatarAbsPath(req.params.avatarName));
 });
 
+const createAdminUser = catchAsync(async (req, res) => {
+  const user = await userService.createHigherUser(req.body, req.params.role);
+  res.status(httpStatus.CREATED).send(user);
+});
+
 module.exports = {
   createUser,
   getUsers,
@@ -81,5 +86,6 @@ module.exports = {
   getAnonUser,
   getAnonUserById,
   getAvatar,
-  updateAvatar
+  updateAvatar,
+  createAdminUser,
 };

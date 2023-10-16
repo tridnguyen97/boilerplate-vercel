@@ -44,8 +44,7 @@ const defaultRoutes = [
   {
     path: '/lottery',
     route: lotteryRoute,
-  }
-
+  },
 ];
 
 const devRoutes = [

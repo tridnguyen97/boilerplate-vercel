@@ -1,8 +1,26 @@
 const dotenv = require('dotenv');
 const path = require('path');
 const Joi = require('joi');
+const fs = require('fs');
 
 dotenv.config({ path: path.join(__dirname, '../../.env'), override: true });
+
+/**
+ * @author Mohamed Riyad <m@ryad.me>
+ *
+ * This function will reload the .env variables.
+ */
+const reloadEnv = () => {
+  const envConfig = dotenv.parse(fs.readFileSync('.env'));
+
+  // eslint-disable-next-line no-restricted-syntax, guard-for-in
+  for (const key in envConfig) {
+    process.env[key] = envConfig[key];
+  }
+};
+
+// Reload .env variables
+reloadEnv();
 
 const envVarsSchema = Joi.object()
   .keys({
@@ -23,10 +41,17 @@ const envVarsSchema = Joi.object()
     SMTP_USERNAME: Joi.string().description('username for email server'),
     SMTP_PASSWORD: Joi.string().description('password for email server'),
     EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
-	  HOST_URL: Joi.string().description('URL of current host'),
+    // DATABASE_URL: Joi.string().description('database connection string'),
+    LOGGER_PATH: Joi.string().description('Log directory'),
+    HOST_URL: Joi.string().description('URL of current host'),
+    TIMEZONE: Joi.string().description('Timezone'),
+    DB_NAME: Joi.string().description('database name'),
+    DB_PASSWORD: Joi.string().description('database password'),
+    DB_HOST: Joi.string().description('db host'),
+    DB_USERNAME: Joi.string().description('db username'),
+    DB_PORT: Joi.string().description('db port'),
     STRINGEE_API_KEY: Joi.string().description('Stringee api key'),
     STRINGEE_API_SECRET: Joi.string().description('Stringee api secret'),
-    TIMEZONE: Joi.string().description('Timezone'),
   })
   .unknown();
 
@@ -65,10 +90,19 @@ module.exports = {
     },
     from: envVars.EMAIL_FROM,
   },
-  host_url: envVars.HOST_URL,
+  database: {
+    url: envVars.DATABASE_URL,
+    name: envVars.DB_NAME,
+    password: envVars.DB_PASSWORD,
+    host: envVars.DB_HOST,
+    port: envVars.DB_PORT,
+    username: envVars.DB_USERNAME,
+  },
   stringee: {
     apiKeySecret: envVars.STRINGEE_API_SECRET,
     apiKeySid: envVars.STRINGEE_API_KEY,
   },
+  log_path: envVars.LOGGER_PATH,
+  host_url: envVars.HOST_URL,
   timezone: envVars.TIMEZONE,
 };

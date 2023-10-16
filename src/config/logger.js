@@ -22,11 +22,11 @@ const logger = winston.createLogger({
       stderrLevels: ['error'],
     }),
     new winston.transports.File({
-      filename: path.join(__dirname, 'error.log'),
+      filename: path.join(config.log_path, 'error.log'),
       level: 'error',
     }),
     new winston.transports.File({
-      filename: path.join(__dirname, 'access.log'),
+      filename: path.join(config.log_path, 'access.log'),
     }),
   ],
 });

@@ -4,7 +4,14 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { videoService } = require('../services');
-const { getStreamHeader, getVideoFileLocation, getVideoUrl, getThumbnailUrl, getVideoAbsLocation, getMobileVideoUrl, } = require('../utils/video.helper');
+const {
+  getStreamHeader,
+  getVideoFileLocation,
+  getVideoUrl,
+  getThumbnailUrl,
+  getVideoAbsLocation,
+  getMobileVideoUrl,
+} = require('../utils/video.helper');
 
 const getAllVideos = catchAsync(async (req, res) => {
   const filter = pick(req.query, []);
@@ -22,6 +29,7 @@ const getVideo = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Video not found');
   }
   const fileLocation = getVideoFileLocation(fileId);
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   const videoSize = fs.statSync(fileLocation).size;
   const headers = getStreamHeader(videoRange, videoSize);
   res.writeHead(206, headers);
@@ -30,12 +38,12 @@ const getVideo = catchAsync(async (req, res) => {
 });
 
 const viewVideo = catchAsync(async (req, res) => {
-  res.sendFile(getVideoAbsLocation(req.params.fileId))
+  res.sendFile(getVideoAbsLocation(req.params.fileId));
 });
 
 const viewMobileVideo = catchAsync(async (req, res) => {
-  res.sendFile(getVideoAbsLocation(req.params.fileId))
-})
+  res.sendFile(getVideoAbsLocation(req.params.fileId));
+});
 
 const uploadVideo = catchAsync(async (req, res) => {
   const { title, description, categoriesId } = req.body;
@@ -106,8 +114,6 @@ const deleteVideoById = catchAsync(async (req, res) => {
 });
 
 const getVideosByCategories = catchAsync(async (req, res) => {
-  console.log('body', JSON.stringify(req.body));
-  console.log('query', JSON.stringify(req.query.type));
   const filter = pick(req.query, []);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const videos = await videoService.findVideoByCategories(filter, options, req.body.categories, req.query.type);
@@ -118,8 +124,8 @@ const getVideosByTitle = catchAsync(async (req, res) => {
   const filter = pick(req.query, []);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const videos = await videoService.findVideoByTitle(filter, options, req.body.title);
-  res.send(videos)
-})
+  res.send(videos);
+});
 
 module.exports = {
   getAllVideos,
@@ -134,5 +140,5 @@ module.exports = {
   updateVideoDetail,
   updateThumbnailById,
   getThumbnailById,
-  deleteVideoById
+  deleteVideoById,
 };

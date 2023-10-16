@@ -1,8 +1,10 @@
 const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
+const _ = require('lodash');
 const prisma = require('../prisma');
 const ApiError = require('../utils/ApiError');
 const { getRandomName, getRandomColor } = require('../utils/contact.helper');
+const referralService = require('./referral.service');
 
 /**
  * Check if email is taken
@@ -154,10 +156,18 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+const getAnonUserByDeviceId = async (deviceId) => {
+  return prisma.anonymousUsers.findUnique({
+    where: {
+      deviceId,
+    },
+  });
+};
+
 const createAnonUser = async (userBody) => {
   const { deviceId } = userBody;
   const user = await getAnonUserByDeviceId(deviceId);
-  if(user) return user
+  if (user) return user;
   const payload = {
     deviceId,
     nickname: getRandomName(),
@@ -186,12 +196,14 @@ const updateAnonUserWithAvatar = async (deviceId, avatarUrl) => {
   });
 };
 
-const getAnonUserByDeviceId = async (deviceId) => {
-  return prisma.anonymousUsers.findUnique({
-    where: {
-      deviceId,
-    },
-  });
+const createHigherUser = async (userBody, role) => {
+  const referral = await referralService.createReferral();
+  const directorBody = {
+    role: _.toUpper(role),
+    referral,
+    ...userBody,
+  };
+  return createUser(directorBody);
 };
 
 module.exports = {
@@ -207,4 +219,5 @@ module.exports = {
   getAnonUserByName,
   getAnonUserByDeviceId,
   updateAnonUserWithAvatar,
+  createHigherUser,
 };

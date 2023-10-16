@@ -14,19 +14,19 @@ const getLocalTime = (utcTime) => {
 };
 
 const getLocalDateTime = (utcDate) => {
-  return momentz.utc(utcDate).tz(config.timezone).format('DD/MM/yyyy HH:mm:ss')
-}
+  return momentz.utc(utcDate).tz(config.timezone).format('DD/MM/yyyy HH:mm:ss');
+};
 
-const convertTime = (created_at) => {
-  local_created_at = new Date(new Date(created_at).getTime() + 25200000)
-  let day = local_created_at.getDate();
-  let month = local_created_at.getMonth() + 1;
-  let year = local_created_at.getFullYear();
-  var hours = local_created_at.getHours();
-  var minutes = local_created_at.getMinutes();
-  var seconds = local_created_at.getSeconds();
-  return `${hours}:${minutes}:${seconds}`
-}
+const convertTime = (createdAt) => {
+  const localCreatedAt = new Date(new Date(createdAt).getTime() + 25200000);
+  const day = localCreatedAt.getDate();
+  const month = localCreatedAt.getMonth() + 1;
+  const year = localCreatedAt.getFullYear();
+  const hours = localCreatedAt.getHours();
+  const minutes = localCreatedAt.getMinutes();
+  const seconds = localCreatedAt.getSeconds();
+  return `${hours}:${minutes}:${seconds}`;
+};
 
 module.exports = {
   randomCloseLottery,
