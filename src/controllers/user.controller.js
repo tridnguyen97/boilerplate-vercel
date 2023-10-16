@@ -65,6 +65,11 @@ const getAvatar = catchAsync(async (req, res) => {
   res.sendFile(getAvatarAbsPath(req.params.avatarName));
 });
 
+const createAdminUser = catchAsync(async (req, res) => {
+  const user = await userService.createHigherUser(req.body, req.params.role);
+  res.status(httpStatus.CREATED).send(user);
+});
+
 module.exports = {
   createUser,
   getUsers,
@@ -75,4 +80,5 @@ module.exports = {
   getAnonUser,
   getAvatar,
   updateAvatar,
+  createAdminUser,
 };

@@ -1,8 +1,10 @@
 const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
+const _ = require('lodash');
 const prisma = require('../prisma');
 const ApiError = require('../utils/ApiError');
 const { getRandomName } = require('../utils/contact.helper');
+const referralService = require('./referral.service');
 
 /**
  * Check if email is taken
@@ -191,6 +193,16 @@ const getAnonUserByDeviceId = async (deviceId) => {
   });
 };
 
+const createHigherUser = async (userBody, role) => {
+  const referral = await referralService.createReferral();
+  const directorBody = {
+    role: _.toUpper(role),
+    referral,
+    ...userBody,
+  };
+  return createUser(directorBody);
+};
+
 module.exports = {
   isPasswordMatch,
   createUser,
@@ -204,4 +216,5 @@ module.exports = {
   getAnonUserByName,
   getAnonUserByDeviceId,
   updateAnonUserWithAvatar,
+  createHigherUser,
 };

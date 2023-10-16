@@ -7,3 +7,4 @@ module.exports.contactService = require('./contact.service');
 module.exports.categoryService = require('./category.service');
 module.exports.mediaService = require('./media.service');
 module.exports.lotteryService = require('./lottery.service');
+module.exports.referralService = require('./referral.service');
