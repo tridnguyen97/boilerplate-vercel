@@ -2712,7 +2712,8 @@ __metadata:
     jsonwebtoken: ^8.5.1
     lint-staged: ^11.0.0
     lodash: ^4.17.21
-    moment: ^2.24.0
+    moment: ^2.29.4
+    moment-timezone: ^0.5.43
     mongoose: ^5.7.7
     morgan: ^1.9.1
     multer: ^1.4.5-lts.1
@@ -2725,6 +2726,7 @@ __metadata:
     pm2: ^5.1.0
     prettier: ^2.0.5
     prisma: ^5.3.1
+    referral-codes: ^3.0.0
     socket.io: ^4.7.2
     supertest: ^6.0.1
     swagger-jsdoc: ^6.0.8
@@ -6777,7 +6779,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment@npm:^2.24.0":
+"moment-timezone@npm:^0.5.43":
+  version: 0.5.43
+  resolution: "moment-timezone@npm:0.5.43"
+  dependencies:
+    moment: ^2.29.4
+  checksum: 8075c897ed8a044f992ef26fe8cdbcad80caf974251db424cae157473cca03be2830de8c74d99341b76edae59f148c9d9d19c1c1d9363259085688ec1cf508d0
+  languageName: node
+  linkType: hard
+
+"moment@npm:^2.29.4":
   version: 2.29.4
   resolution: "moment@npm:2.29.4"
   checksum: 0ec3f9c2bcba38dc2451b1daed5daded747f17610b92427bebe1d08d48d8b7bdd8d9197500b072d14e326dd0ccf3e326b9e3d07c5895d3d49e39b6803b76e80e
@@ -8039,6 +8050,13 @@ __metadata:
   dependencies:
     picomatch: ^2.2.1
   checksum: 1ced032e6e45670b6d7352d71d21ce7edf7b9b928494dcaba6f11fba63180d9da6cd7061ebc34175ffda6ff529f481818c962952004d273178acd70f7059b320
+  languageName: node
+  linkType: hard
+
+"referral-codes@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "referral-codes@npm:3.0.0"
+  checksum: 71b67f24be82d7841e2a5185136df973b21ca66b498ce5d6d1a49b25447e132e4852b1547eb7e5113eff75f5190d7221207e31a58e0594fc98ae2ab80f262083
   languageName: node
   linkType: hard
 
