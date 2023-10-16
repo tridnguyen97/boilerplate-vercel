@@ -20,11 +20,25 @@ const getVideoStream = async (fileId, start, end) => {
 };
 
 const getAllVideos = async (filter, options) => {
-  return prisma.videos.findMany({
-    filter,
-    options,
-    select: selectCategories(),
-  });
+  // tạm thời không có DRY vì chưa có extend phần paginate cho prisma
+  const [videos, totalCount] = await prisma.$transaction([
+    prisma.videos.findMany({
+      filter,
+      options,
+      select: selectCategories(),
+    }),
+    prisma.videos.count({
+      where: filter,
+    }),
+  ]);
+  const { results, page, limit } = videos;
+  return {
+    results,
+    page,
+    limit,
+    totalPages: Math.ceil(totalCount / limit),
+    totalCount,
+  };
 };
 
 const getVideo = async (videoId) => {

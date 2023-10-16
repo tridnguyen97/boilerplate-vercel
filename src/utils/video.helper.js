@@ -44,6 +44,10 @@ const getThumbnailUrl = (thumbnailId) => {
   return `${config.host_url}/v1/videos/thumbnail/${thumbnailId}`;
 };
 
+const getMobileVideoUrl = (videoId) => {
+  return `${config.host_url}/v1/videos/view/mobile/${videoId}`;
+};
+
 const getThumbnailFileLocation = (thumbnailId) => {
   return path.resolve(`media/images/${thumbnailId}`);
 };
@@ -147,6 +151,10 @@ const selectCategories = () => {
   };
 };
 
+const getVideoAbsLocation = (videoName) => {
+  return path.resolve(`media/videos/${videoName}`);
+};
+
 const removeFile = (filePath) => {
   // eslint-disable-next-line security/detect-non-literal-fs-filename
   fs.unlink(filePath, (err) => {
@@ -172,7 +180,9 @@ module.exports = {
   getStreamHeader,
   getVideoFileLocation,
   getFileAbsPath,
+  getVideoAbsLocation,
   getVideoUrl,
+  getMobileVideoUrl,
   getThumbnailUrl,
   getThumbnailFileLocation,
   queryCreateCategoriesList,
