@@ -2713,7 +2713,7 @@ __metadata:
     express: ^4.17.1
     express-mongo-sanitize: ^2.0.0
     express-rate-limit: ^5.0.0
-    faker: ^5.1.0
+    faker: ^6.6.6
     helmet: ^4.1.0
     http-status: ^1.4.0
     husky: 7.0.4
@@ -2736,6 +2736,7 @@ __metadata:
     pm2: ^5.1.0
     prettier: ^2.0.5
     prisma: ^5.3.1
+    referral-codes: 2.0.3
     socket.io: ^4.7.2
     supertest: ^6.0.1
     swagger-jsdoc: ^6.0.8
@@ -3939,10 +3940,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"faker@npm:^5.1.0":
-  version: 5.5.3
-  resolution: "faker@npm:5.5.3"
-  checksum: 684fd64c8d3897e54248f95b4f6319f75d97691b8500cd13adf4af2c28f9204f766c1d1aaa6b41338f0beaaa87256c3132f8708a1a8f189d122b92f6b98081c3
+"faker@npm:^6.6.6":
+  version: 6.6.6
+  resolution: "faker@npm:6.6.6"
+  checksum: bfb0d581ab4d76095f2c6bff213fe1735ce077f0f8df849c144ad26035e105bce1b7a704cc030366338c52e25b636ac097a712426a78c9b8804af78f6f2bffe7
   languageName: node
   linkType: hard
 
@@ -8082,6 +8083,13 @@ __metadata:
   dependencies:
     picomatch: ^2.2.1
   checksum: 1ced032e6e45670b6d7352d71d21ce7edf7b9b928494dcaba6f11fba63180d9da6cd7061ebc34175ffda6ff529f481818c962952004d273178acd70f7059b320
+  languageName: node
+  linkType: hard
+
+"referral-codes@npm:2.0.3":
+  version: 2.0.3
+  resolution: "referral-codes@npm:2.0.3"
+  checksum: e5ed58111b7ff3103704f6e9fa1b73edbcaea2ab4b625b0dcdbce77b33239ae8e93baa5d1a36cd2e73610a3490595eb10dc4ebfb6da60a3f0223f11f4c289623
   languageName: node
   linkType: hard
 
