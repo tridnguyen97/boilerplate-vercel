@@ -41,7 +41,7 @@ const envVarsSchema = Joi.object()
     SMTP_USERNAME: Joi.string().description('username for email server'),
     SMTP_PASSWORD: Joi.string().description('password for email server'),
     EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
-    // DATABASE_URL: Joi.string().description('database connection string'),
+    DATABASE_URL: Joi.string().description('database connection string'),
     LOGGER_PATH: Joi.string().description('Log directory'),
     HOST_URL: Joi.string().description('URL of current host'),
     TIMEZONE: Joi.string().description('Timezone'),
