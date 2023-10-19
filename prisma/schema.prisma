@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -16,7 +16,7 @@ enum Roles {
 }
 
 model users {
-  id              String   @id @default(uuid()) @db.Uuid
+  id              String   @id @default(uuid())
   createdAt       DateTime @default(now())
   email           String?   @unique
   isEmailVerified Boolean  @default(false)
@@ -38,7 +38,7 @@ enum tokenTypes {
 }
 
 model tokens {
-  id          String   @id @default(uuid()) @db.Uuid
+  id          String   @id @default(uuid())
   blacklisted Boolean
   createdAt   DateTime @default(now())
   expires     DateTime @db.Timestamp
@@ -46,11 +46,11 @@ model tokens {
   type        String
   updatedAt   DateTime @updatedAt
   user        users    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String   @db.Uuid
+  userId      String  
 }
 
 model videos {
-  id          String        @id @default(uuid()) @db.Uuid
+  id          String        @id @default(uuid())
   thumbnailId String        @unique
   fileId      String        @unique
   videoUrl	  String		@default("")
@@ -64,27 +64,27 @@ model videos {
 }
 
 model groups {
-  id          String        @id @default(uuid()) @db.Uuid
+  id          String        @id @default(uuid())
   name        String
   owner       users         @relation(fields: [ownerId], references: [id])
-  ownerId     String        @db.Uuid
+  ownerId     String       
   contacts    contacts[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model contacts {
-  id          String   @id @default(uuid()) @db.Uuid
+  id          String   @id @default(uuid())
   user        anonymousUsers?    @relation(fields: [userId], references: [id])
-  userId      String?   @unique @db.Uuid
+  userId      String?   @unique
   group       groups?   @relation(fields: [groupId], references: [id])
-  groupId     String?   @db.Uuid
+  groupId     String?  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model anonymousUsers {
-  id          String    @id @default(uuid()) @db.Uuid
+  id          String    @id @default(uuid())
   nickname    String
   contacts    contacts?
   avatar	 String?
@@ -94,12 +94,12 @@ model anonymousUsers {
   deviceId    String    @unique
   createdAt   DateTime  @default(now())
   user        users?    @relation(fields: [userId], references: [id])
-  userId      String?    @unique @db.Uuid
+  userId      String?    @unique
   imgMsg      chatMedia[]
 }
 
 model categories {
-  id          String    @id @default(uuid()) @db.Uuid
+  id          String    @id @default(uuid())
   name        String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -108,9 +108,9 @@ model categories {
 
 model categoriesOnVideos {
   video      videos?     @relation(fields: [videoId], references: [id])
-  videoId    String  @db.Uuid
+  videoId    String 
   category   categories? @relation(fields: [categoryId], references: [id])
-  categoryId String @db.Uuid 
+  categoryId String 
   createdAt DateTime @default(now())
 
   @@id([videoId, categoryId])
@@ -118,9 +118,9 @@ model categoriesOnVideos {
 
 model anonymousFriends {
   follower    anonymousUsers @relation("follower", fields: [followerId], references: [id])
-  followerId  String @db.Uuid
+  followerId  String
   following   anonymousUsers @relation("following", fields: [followingId], references: [id])
-  followingId String @db.Uuid
+  followingId String
   relationshipStatus     RelationshipStatus?
   notificationPreference NotificationPreference?
   @@id([followerId, followingId])
@@ -139,12 +139,12 @@ enum NotificationPreference {
 }
 
 model chatMedia {
-  id        String @id @default(uuid()) @db.Uuid
+  id        String @id @default(uuid())
   filePath  String
   fileName  String
   createdAt DateTime @default(now())
   createdBy anonymousUsers  @relation(fields: [userId], references: [id])
-  userId    String   @db.Uuid
+  userId    String  
   type      String
 }
 
@@ -188,7 +188,7 @@ model configLottery {
 model orderLottery {
   id             Int      @id @default(autoincrement())
   balance        Int?
-  userid         String?  @db.Uuid
+  userid         String? 
   idChartLottery Int?
   time           Int?
   name           String?  @db.VarChar(45)
