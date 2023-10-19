@@ -196,14 +196,14 @@ const updateAnonUserWithAvatar = async (deviceId, avatarUrl) => {
   });
 };
 
-const createHigherUser = async (userBody, role) => {
-  const referral = await referralService.createReferral();
-  const directorBody = {
-    role: _.toUpper(role),
-    referral,
-    ...userBody,
-  };
-  return createUser(directorBody);
+const createHigherUser = async (userBody) => {
+  const user = await createUser(userBody);
+  await referralService.createReferral(user);
+  return user;
+};
+
+const getUserByRole = async (role) => {
+  const user = await prisma.users.findMany({});
 };
 
 module.exports = {

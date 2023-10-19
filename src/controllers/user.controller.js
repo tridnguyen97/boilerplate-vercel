@@ -2,11 +2,18 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { userService } = require('../services');
+const { userService, referralService } = require('../services');
 const { getAvatarUrl, getAvatarAbsPath } = require('../utils/media.helper');
 
 const createUser = catchAsync(async (req, res) => {
-  const user = await userService.createUser(req.body);
+  const { referralCode, ...inputBody } = req.body;
+  const referral = await referralService.findReferralByCode(referralCode);
+  if (!referral) throw new ApiError(httpStatus.NOT_FOUND, 'Mã giới thiệu không tìm thấy.');
+  const userBody = {
+    refParentId: referral.code,
+    ...inputBody,
+  };
+  const user = await userService.createUser(userBody);
   res.status(httpStatus.CREATED).send(user);
 });
 
@@ -72,8 +79,12 @@ const getAvatar = catchAsync(async (req, res) => {
 });
 
 const createAdminUser = catchAsync(async (req, res) => {
-  const user = await userService.createHigherUser(req.body, req.params.role);
+  const user = await userService.createHigherUser(req.body);
   res.status(httpStatus.CREATED).send(user);
+});
+
+const getDirectorUser = catchAsync(async (req, res) => {
+  const director = await userService.getUserById();
 });
 
 module.exports = {

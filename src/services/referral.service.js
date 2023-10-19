@@ -1,13 +1,12 @@
 const prisma = require('../prisma');
-const { generateCode, getLink } = require('../utils/referral.helper');
+const { generateCode } = require('../utils/referral.helper');
 
-const createReferral = async () => {
+const createReferral = async (referrer) => {
   const code = generateCode();
-  const link = getLink(code);
   return prisma.referral.create({
     data: {
-      code,
-      link,
+      code: code[0],
+      userId: referrer.id,
     },
   });
 };

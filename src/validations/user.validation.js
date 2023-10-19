@@ -6,6 +6,7 @@ const createUser = {
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
+    referralCode: Joi.string().required(),
   }),
 };
 
@@ -49,6 +50,7 @@ const createDirector = {
     email: Joi.string().email(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
+    role: Joi.string().required(),
   }),
 };
 
