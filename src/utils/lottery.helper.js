@@ -9,12 +9,12 @@ const randomCloseLottery = async () => {
 };
 
 const getLocalTime = (utcTime) => {
-  const localTime = momentz.utc(utcTime).tz(config.timezone).format('HH:mm:ss');
+  const localTime = momentz.utc(utcTime).second(0).tz(config.timezone).format('HH:mm:ss');
   return localTime;
 };
 
 const getLocalDateTime = (utcDate) => {
-  return momentz.utc(utcDate).tz(config.timezone).format('DD/MM/yyyy HH:mm:ss');
+  return momentz.utc(utcDate).tz(config.timezone).format('DD/MM/yyyy HH:mm:ss Z');
 };
 
 const convertTime = (createdAt) => {
