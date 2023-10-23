@@ -3,8 +3,7 @@ const _ = require('lodash');
 const userService = require('./user.service');
 const ApiError = require('../utils/ApiError');
 const prisma = require('../prisma');
-const { getLocalTime, getLocalDateTime, convertTime } = require('../utils/lottery.helper');
-const logger = require('../config/logger');
+const { getLocalTime, getLocalDateTime } = require('../utils/lottery.helper');
 
 const updateOrderLottery = async (orderData, user) => {
   const { balance, value, name, time } = orderData;
@@ -74,6 +73,7 @@ const findHistoryOrderLottery = async (queryFilter, options, user, name) => {
       sessionId: item.sessionId,
       status: item.status,
       createdAt: getLocalDateTime(item.createdAt),
+      ...item,
     };
   });
 

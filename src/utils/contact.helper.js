@@ -6,9 +6,9 @@ const getRandomName = () => {
 
 const getRandomColor = () => {
   return fakerVI.color.rgb();
-}
+};
 
 module.exports = {
   getRandomName,
-  getRandomColor
+  getRandomColor,
 };

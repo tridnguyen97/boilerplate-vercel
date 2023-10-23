@@ -37,12 +37,11 @@ router.route('/thumbnail/:thumbnailId').get(videoController.getThumbnailById);
 
 router.route('/titles').post(videoController.getVideosByTitle);
 
-router.route('/view/mobile/:fileId').get(videoController.viewMobileVideo)
+router.route('/view/mobile/:fileId').get(videoController.viewMobileVideo);
 
 router.route('/id/:id').patch(videoController.updateVideoDetail).delete(videoController.deleteVideoById);
 
 router.route('/metadata/:id').get(videoController.getVideoById);
-
 
 module.exports = router;
 

@@ -2,7 +2,12 @@ const catchAsync = require('../utils/catchAsync');
 const lotteryService = require('../services/lottery.service');
 const pick = require('../utils/pick');
 
+const socketio = require('../common/socketio');
+
 const orderLottery = catchAsync(async (req, res) => {
+  const io = socketio.getIO();
+
+  io.to('1').emit('msg-order', 'Ok');
   const order = await lotteryService.updateOrderLottery(req.body, req.user);
   const result = {
     message: 'Đơn hàng thành công',

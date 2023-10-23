@@ -10,12 +10,10 @@ router
   .route('/order')
   .post(auth('updateOrders'), lotteryController.orderLottery)
   .get(auth('getOrders'), lotteryController.getOrderLottery);
-
 router
   .route('/history')
   .get(auth('getHistoryOrders'), validate(lotteryValidation.getHistory), lotteryController.getOrderLotteryHistory);
 
 router.route('/user/balance').get(auth('getUserBalance'), lotteryController.getUserBalance);
-
 
 module.exports = router;

@@ -1,8 +1,8 @@
 const path = require('path');
-const config = require('../config/config');
-const logger = require('../config/logger');
 const fs = require('fs');
 const httpStatus = require('http-status');
+const config = require('../config/config');
+const logger = require('../config/logger');
 const ApiError = require('./ApiError');
 
 const getStart = (range) => {
@@ -25,8 +25,6 @@ const getStreamHeader = (range, videoSize) => {
     'Content-Length': contentLength,
     'Content-Type': 'video/mp4',
   };
-  console.log(start, end, contentLength);
-
   return headers;
 };
 
@@ -43,8 +41,8 @@ const getVideoUrl = (videoId) => {
 };
 
 const getMobileVideoUrl = (videoId) => {
-  return `${config.host_url}/v1/videos/view/mobile/${videoId}`
-}
+  return `${config.host_url}/v1/videos/view/mobile/${videoId}`;
+};
 
 const getThumbnailUrl = (thumbnailId) => {
   return `${config.host_url}/v1/videos/thumbnail/${thumbnailId}`;
@@ -57,11 +55,11 @@ const getThumbnailFileLocation = (thumbnailId) => {
 const queryCreateCategoriesList = async (categoryIds) => {
   let query = {};
   let ids = [];
-  logger.info(`query category ids ${categoryIds}`)
-  logger.info(`type of category ids ${typeof categoryIds}`)
+  logger.info(`query category ids ${categoryIds}`);
+  logger.info(`type of category ids ${typeof categoryIds}`);
   if (categoryIds instanceof Array) ids = categoryIds;
   if (typeof categoryIds === 'string') ids = JSON.parse(categoryIds);
-  logger.info(`ids ${ids}`)
+  logger.info(`ids ${ids}`);
   if (!ids || !ids.length)
     return {
       create: [],
@@ -84,11 +82,11 @@ const queryCreateCategoriesList = async (categoryIds) => {
 const queryUpdateCategoriesList = async (categoryIds) => {
   let query = {};
   let ids = [];
-  logger.info(`query category ids ${categoryIds}`)
-  logger.info(`type of category ids ${typeof categoryIds}`)
+  logger.info(`query category ids ${categoryIds}`);
+  logger.info(`type of category ids ${typeof categoryIds}`);
   if (categoryIds instanceof Array) ids = categoryIds;
   if (typeof categoryIds === 'string') ids = JSON.parse(categoryIds);
-  logger.info(`ids ${ids}`)
+  logger.info(`ids ${ids}`);
   if (!ids || !ids.length)
     return {
       create: [],
@@ -102,7 +100,6 @@ const queryUpdateCategoriesList = async (categoryIds) => {
       },
     };
   });
-  console.log(`query: ${JSON.stringify(query)}`);
   return {
     deleteMany: {},
     create: query,
@@ -110,7 +107,6 @@ const queryUpdateCategoriesList = async (categoryIds) => {
 };
 
 const queryFindCategoriesList = (categories, queryType) => {
-  console.log(queryType);
   if (queryType === 'name') {
     return {
       some: {
@@ -160,7 +156,7 @@ const selectCategories = () => {
 
 const getVideoAbsLocation = (videoName) => {
   return path.resolve(`media/videos/${videoName}`);
-}
+};
 
 const removeFile = (filePath) => {
   // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -186,8 +182,8 @@ const removeFileSync = (filePath) => {
 module.exports = {
   getStreamHeader,
   getVideoFileLocation,
-  getVideoAbsLocation,
   getFileAbsPath,
+  getVideoAbsLocation,
   getVideoUrl,
   getMobileVideoUrl,
   getThumbnailUrl,

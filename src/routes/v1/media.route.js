@@ -28,12 +28,12 @@ router.route('/video').post(
 );
 router.route('/audio').post(
   audioChatUpload.fields([
-    {name: 'audio', maxCount: 1},
+    { name: 'audio', maxCount: 1 },
     { name: 'name', maxCount: 1 },
     { name: 'userId', maxCount: 1 },
   ]),
   mediaController.uploadAudioMedia
-)
+);
 router.route('/:file').get(mediaController.getMedia);
 router.route('/video/:file').get(mediaController.getVideo);
 router.route('/audio/:file').get(mediaController.getAudio);

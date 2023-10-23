@@ -1,16 +1,22 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { authService, userService, tokenService } = require('../services');
+const { authService, userService, tokenService, referralService } = require('../services');
+const ApiError = require('../utils/ApiError');
 
 const register = catchAsync(async (req, res) => {
-  const user = await userService.createUser(req.body);
+  const { referralCode, ...inputBody } = req.body;
+  const referral = await referralService.findReferralByCode(referralCode);
+  if (!referral) throw new ApiError(httpStatus.NOT_FOUND, 'Mã giới thiệu không tìm thấy.');
+  const userBody = {
+    refParentId: referral.code,
+    ...inputBody,
+  };
+  const user = await userService.createUser(userBody);
   const tokens = await tokenService.generateAuthTokens(user);
   res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
 const login = catchAsync(async (req, res) => {
-  // const { email, password } = req.body;
-  // const user = await authService.loginUserWithEmailAndPassword(email, password);
   const { name, password } = req.body;
   const user = await authService.loginUserWithNameAndPassword(name, password);
   const tokens = await tokenService.generateAuthTokens(user);
