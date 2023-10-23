@@ -13,6 +13,8 @@ datasource db {
 enum Roles {
   USER  @map("user")
   ADMIN @map("admin")
+  DIRECTOR @map("director")
+  MANAGER @map("manager")
 }
 
 model users {
@@ -27,7 +29,19 @@ model users {
   tokens          tokens[]
   groups          groups[]
   aid             anonymousUsers?
-  balance         Float         @default(0)
+  balance         Float                 @default(0)
+  referral        referral?   
+  refParentId     String                @default("")
+  subscription    subscriptionTypes     @default(FREE)
+  count           Int                   @default(50)
+  banks           bank[]
+  transactions    transaction[]
+  withdrawalRequest withdrawalRequest[]
+}
+
+enum subscriptionTypes {
+  FREE @map("free")
+  VIP  @map("vip")
 }
 
 enum tokenTypes {
@@ -83,6 +97,11 @@ model contacts {
   updatedAt   DateTime @updatedAt
 }
 
+enum anonTypes {
+  admin @map("admin")
+  user @map("user")
+}
+
 model anonymousUsers {
   id          String    @id @default(uuid())
   nickname    String
@@ -96,6 +115,8 @@ model anonymousUsers {
   user        users?    @relation(fields: [userId], references: [id])
   userId      String?    @unique
   imgMsg      chatMedia[]
+  convId      String?
+  type        anonTypes @default(user)
 }
 
 model categories {
@@ -121,8 +142,10 @@ model anonymousFriends {
   followerId  String
   following   anonymousUsers @relation("following", fields: [followingId], references: [id])
   followingId String
+  convId      String?
   relationshipStatus     RelationshipStatus?
   notificationPreference NotificationPreference?
+  createdAt DateTime  @default(now())
   @@id([followerId, followingId])
 }
 
@@ -193,13 +216,67 @@ model orderLottery {
   time           Int?
   name           String?  @db.VarChar(45)
   createdAt      DateTime @default(now()) @map("created_at")
-  profit         Int?
+  profit         Int      @default(0)
   status         String?  @default("PENDDING") @db.VarChar(15)
   orderTalent    Float    @default(0)
   orderFaint     Float    @default(0)
   orderEven      Float    @default(0)
   orderOdd       Float    @default(0)
   userName       String?  @db.VarChar(45)
+  sessionId      String?  @db.VarChar(45)
 
   @@map("tb_order")
+}
+
+model referral {
+  id       String   @id @default(uuid())
+  code     String   @unique
+  link     String?
+  user     users    @relation(fields: [userId], references: [id]) 
+  userId   String   @unique
+}
+
+model bank {
+  id                  Int                   @id @default(autoincrement())
+  name                String
+  code                String 
+  cardNum             String
+  users               users[]
+  withdrawalRequest   withdrawalRequest[]
+  transactions        transaction[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+}
+
+enum transactionType {
+  nap     @map("nap")
+  rut     @map("rut")
+  hoantra @map("hoan tra")
+}
+
+model transaction {
+  id            Int                 @id @default(autoincrement())
+  type          transactionType     @default(nap)
+  amount        Int                 @default(0)
+  createdAt     DateTime            @default(now())
+  users         users[]
+  bank          bank[]
+  withdrawal    withdrawalRequest?  @relation(fields: [withdrawalId], references: [id])
+  withdrawalId  Int? 
+}
+
+enum withdrawalStatus {
+  pending @map("pending")
+  confirm @map("confirm")
+  cancel  @map("cancel")
+}
+
+model withdrawalRequest {
+  id          Int               @id @default(autoincrement())
+  amount      Int               @default(0)
+  bank        bank[]
+  users       users[]
+  createdAt   DateTime          @default(now())
+  status      withdrawalStatus  @default(pending)
+  transaction transaction[]
 }
