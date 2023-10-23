@@ -33,9 +33,6 @@ router.route('/anon/avatar').post(
 );
 
 router.route('/anon/avatar/:avatarName').get(userController.getAvatar);
-router
-  .route('/admin/:role')
-  .post(auth('createDirectors'), validate(userValidation.createDirector), userController.createAdminUser);
 module.exports = router;
 
 /**

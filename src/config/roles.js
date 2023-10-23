@@ -1,7 +1,7 @@
 const allRoles = {
-  user: ['updateOrders', 'getOrders', 'getHistoryOrders'],
+  user: ['updateOrders', 'getOrders', 'getHistoryOrders', 'getUserBalance', 'createBanks', 'getBanks'],
   manager: [''],
-  director: [''],
+  director: ['getUsers', 'getManagers', 'manageUserBalance', 'manageUserSubscription'],
   admin: [
     'getUsers',
     'manageUsers',
@@ -16,6 +16,8 @@ const allRoles = {
     'getManagers',
     'updateManagers',
     'deleteManagers',
+    'createBanks',
+    'getBanks',
   ],
 };
 
