@@ -27,7 +27,7 @@
     "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up",
     "prepare": "husky install",
     "migration:generate": "npx prisma generate",
-    "migration:push": "npx prisma db push --accept-data-loss",
+    "migration:push": "npx prisma db push",
     "migrate:staging": "npx prisma migrate deploy",
     "db:seed": "npx prisma db seed"
   },

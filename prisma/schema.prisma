@@ -29,12 +29,14 @@ model users {
   tokens          tokens[]
   groups          groups[]
   aid             anonymousUsers?
-  balance         Float         @default(0)
+  balance         Float                 @default(0)
   referral        referral?   
-  refParentId     String   @default("")
-  subscription    subscriptionTypes @default(FREE)
-  count           Int      @default(50)
-  banks           bank[]     
+  refParentId     String                @default("")
+  subscription    subscriptionTypes     @default(FREE)
+  count           Int                   @default(50)
+  banks           bank[]
+  transactions    transaction[]
+  withdrawalRequest withdrawalRequest[]
 }
 
 enum subscriptionTypes {
@@ -95,6 +97,11 @@ model contacts {
   updatedAt   DateTime @updatedAt
 }
 
+enum anonTypes {
+  admin @map("admin")
+  user @map("user")
+}
+
 model anonymousUsers {
   id          String    @id @default(uuid()) @db.Uuid
   nickname    String
@@ -108,6 +115,8 @@ model anonymousUsers {
   user        users?    @relation(fields: [userId], references: [id])
   userId      String?    @unique @db.Uuid
   imgMsg      chatMedia[]
+  convId      String?
+  type        anonTypes @default(user)
 }
 
 model categories {
@@ -122,7 +131,7 @@ model categoriesOnVideos {
   video      videos?     @relation(fields: [videoId], references: [id])
   videoId    String  @db.Uuid
   category   categories? @relation(fields: [categoryId], references: [id])
-  categoryId String @db.Uuid 
+  categoryId String @db.Uuid
   createdAt DateTime @default(now())
 
   @@id([videoId, categoryId])
@@ -136,6 +145,7 @@ model anonymousFriends {
   convId      String
   relationshipStatus     RelationshipStatus?
   notificationPreference NotificationPreference?
+  createdAt DateTime  @default(now())
   @@id([followerId, followingId])
 }
 
@@ -201,19 +211,19 @@ model configLottery {
 model orderLottery {
   id             Int      @id @default(autoincrement())
   balance        Int?
-  userid         String?  @db.Uuid
+  userid         String?  @db.Uuid 
   idChartLottery Int?
   time           Int?
   name           String?  @db.VarChar(45)
   createdAt      DateTime @default(now()) @map("created_at")
-  profit         Int?
+  profit         Int      @default(0)
   status         String?  @default("PENDDING") @db.VarChar(15)
   orderTalent    Float    @default(0)
   orderFaint     Float    @default(0)
   orderEven      Float    @default(0)
   orderOdd       Float    @default(0)
   userName       String?  @db.VarChar(45)
-  sessionId    String?  @db.VarChar(45)
+  sessionId      String?  @db.VarChar(45)
 
   @@map("tb_order")
 }
@@ -223,14 +233,50 @@ model referral {
   code     String   @unique
   link     String?
   user     users    @relation(fields: [userId], references: [id]) 
-  userId   String   @unique @db.Uuid
+  userId   String   @unique @db.Uuid 
 }
+
 model bank {
-  id      Int @id @default(autoincrement())
-  name    String
-  code    String 
-  users   users[]
-  cardNum String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                  Int                   @id @default(autoincrement())
+  name                String
+  code                String 
+  cardNum             String
+  users               users[]
+  withdrawalRequest   withdrawalRequest[]
+  transactions        transaction[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+}
+
+enum transactionType {
+  nap     @map("nap")
+  rut     @map("rut")
+  hoantra @map("hoan tra")
+}
+
+model transaction {
+  id            Int                 @id @default(autoincrement())
+  type          transactionType     @default(nap)
+  amount        Int                 @default(0)
+  createdAt     DateTime            @default(now())
+  users         users[]
+  bank          bank[]
+  withdrawal    withdrawalRequest?  @relation(fields: [withdrawalId], references: [id])
+  withdrawalId  Int? 
+}
+
+enum withdrawalStatus {
+  pending @map("pending")
+  confirm @map("confirm")
+  cancel  @map("cancel")
+}
+
+model withdrawalRequest {
+  id          Int               @id @default(autoincrement())
+  amount      Int               @default(0)
+  bank        bank[]
+  users       users[]
+  createdAt   DateTime          @default(now())
+  status      withdrawalStatus  @default(pending)
+  transaction transaction[]
 }
