@@ -27,7 +27,7 @@
     "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up",
     "prepare": "husky install",
     "migration:generate": "npx prisma generate",
-    "migration:push": "npx prisma db push --accept-data-loss",
+    "migration:push": "npx prisma db push",
     "migrate:staging": "npx prisma migrate deploy",
     "db:seed": "npx prisma db seed"
   },
@@ -80,6 +80,7 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "pm2": "^5.1.0",
+    "referral-codes": "2.0.3",
     "socket.io": "^4.7.2",
     "swagger-jsdoc": "^6.0.8",
     "swagger-ui-express": "^4.1.6",
