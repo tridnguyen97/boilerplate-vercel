@@ -73,6 +73,7 @@ const findHistoryOrderLottery = async (queryFilter, options, user, name) => {
       sessionId: item.sessionId,
       status: item.status,
       createdAt: getLocalDateTime(item.createdAt),
+      ...item,
     };
   });
 

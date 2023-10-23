@@ -9,7 +9,6 @@ const categoryRoute = require('./category.route');
 const stringeeRoute = require('./stringee.route');
 const lotteryRoute = require('./lottery.route');
 const adminRoute = require('./admin.route');
-const socketRoute = require('./socket.route');
 const bankRoute = require('./bank.route');
 const config = require('../../config/config');
 
@@ -51,10 +50,6 @@ const defaultRoutes = [
   {
     path: '/admin',
     route: adminRoute,
-  },
-  {
-    path: '/socket',
-    route: socketRoute,
   },
   {
     path: '/bank',

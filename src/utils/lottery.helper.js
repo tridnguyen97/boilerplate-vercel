@@ -14,7 +14,7 @@ const getLocalTime = (utcTime) => {
 };
 
 const getLocalDateTime = (utcDate) => {
-  return momentz.utc(utcDate).tz(config.timezone).format('DD/MM/yyyy HH:mm:ss Z');
+  return momentz.utc(utcDate).tz(config.timezone).format('DD/MM/yyyy HH:mm:ss');
 };
 
 const convertTime = (createdAt) => {
