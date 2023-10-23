@@ -5,7 +5,6 @@ const userValidation = require('../../validations/user.validation');
 const userController = require('../../controllers/user.controller');
 const imageChatUpload = require('../../middlewares/imageChatUpload');
 
-
 const router = express.Router();
 
 router
@@ -21,10 +20,9 @@ router
 
 router.route('/anon').post(userController.createAnonUser);
 
-router.route('/anon/:deviceId').get(userController.getAnonUserById)
+router.route('/anon/:deviceId').get(userController.getAnonUserById);
 
 router.route('/anon/list/:name').get(userController.getAnonUser);
-
 
 router.route('/anon/avatar').post(
   imageChatUpload.fields([
@@ -35,7 +33,6 @@ router.route('/anon/avatar').post(
 );
 
 router.route('/anon/avatar/:avatarName').get(userController.getAvatar);
-
 module.exports = router;
 
 /**
@@ -64,7 +61,6 @@ module.exports = router;
  *               - name
  *               - email
  *               - password
- *               - role
  *             properties:
  *               name:
  *                 type: string
@@ -77,14 +73,10 @@ module.exports = router;
  *                 format: password
  *                 minLength: 8
  *                 description: At least one number and one letter
- *               role:
- *                  type: string
- *                  enum: [user, admin]
  *             example:
  *               name: fake name
  *               email: fake@example.com
  *               password: password1
- *               role: user
  *     responses:
  *       "201":
  *         description: Created
@@ -302,7 +294,7 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/AnonymousUser'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":

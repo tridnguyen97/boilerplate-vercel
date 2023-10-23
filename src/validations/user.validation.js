@@ -1,11 +1,12 @@
 const Joi = require('joi');
-const { password, objectId } = require('./custom.validation');
+const { password } = require('./custom.validation');
 
 const createUser = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
-    name: Joi.string().required()
+    name: Joi.string().required(),
+    referralCode: Joi.string().required(),
   }),
 };
 
@@ -44,10 +45,20 @@ const deleteUser = {
   }),
 };
 
+const createDirector = {
+  body: Joi.object().keys({
+    email: Joi.string().email(),
+    password: Joi.string().required().custom(password),
+    name: Joi.string().required(),
+    role: Joi.string().required(),
+  }),
+};
+
 module.exports = {
   createUser,
   getUsers,
   getUser,
   updateUser,
   deleteUser,
+  createDirector,
 };

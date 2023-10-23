@@ -8,6 +8,8 @@ const mediaRoute = require('./media.route');
 const categoryRoute = require('./category.route');
 const stringeeRoute = require('./stringee.route');
 const lotteryRoute = require('./lottery.route');
+const adminRoute = require('./admin.route');
+const bankRoute = require('./bank.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -44,8 +46,15 @@ const defaultRoutes = [
   {
     path: '/lottery',
     route: lotteryRoute,
-  }
-
+  },
+  {
+    path: '/admin',
+    route: adminRoute,
+  },
+  {
+    path: '/bank',
+    route: bankRoute,
+  },
 ];
 
 const devRoutes = [

@@ -1,36 +1,36 @@
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const { SuccessResponseObject, ErrorResponseObject } = require('../utils/http');
 
 const config = require('../config/config');
 const logger = require('../config/logger');
-const apiKeySid = config.stringee.apiKeySid;
-const apiKeySecret = config.stringee.apiKeySecret;
 
-module.exports = { 
-    getAccessToken: async(req, res, next) => {
-        var {userId, expired} = req.body
-        var now = Math.floor(Date.now() / 1000);
-        var exp = now + expired;
+const { apiKeySid } = config.stringee;
+const { apiKeySecret } = config.stringee;
 
-        var header = {cty: "stringee-api;v=1"};
-        var payload = {
-            jti: apiKeySid + "-" + now,
-            iss: apiKeySid,
-            exp: exp,
-            userId: userId
-        };
-        try {
-            var token = jwt.sign(payload, apiKeySecret, {algorithm: 'HS256', header: header, noTimestamp: true})
-            var data = {
-                "access_token": token,
-                "userId": userId,
-                "expired": expired
-            }
-            return res.json(new SuccessResponseObject("Succeeded", data))
-        }
-        catch(error) {
-            logger.error(error)
-            return res.json(new ErrorResponseObject("Failed", {error}))
-        }
+module.exports = {
+  getAccessToken: async (req, res, next) => {
+    const { userId, expired } = req.body;
+    const now = Math.floor(Date.now() / 1000);
+    const exp = now + expired;
+
+    const header = { cty: 'stringee-api;v=1' };
+    const payload = {
+      jti: `${apiKeySid}-${now}`,
+      iss: apiKeySid,
+      exp,
+      userId,
+    };
+    try {
+      const token = jwt.sign(payload, apiKeySecret, { algorithm: 'HS256', header, noTimestamp: true });
+      const data = {
+        access_token: token,
+        userId,
+        expired,
+      };
+      return res.json(new SuccessResponseObject('Succeeded', data));
+    } catch (error) {
+      logger.error(error);
+      return res.json(new ErrorResponseObject('Failed', { error }));
     }
-}
+  },
+};
